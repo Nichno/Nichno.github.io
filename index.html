@@ -3,33 +3,48 @@
     <style>
         body{
 font-family: arial;
+color: antiquewhite;
             flex-wrap: wrap;
-            
+            background-color: darkslategrey;
         }
 a:link, a:visited {
   background-color: #f44336;
-  color: white;
+  color: rgb(0, 0, 0);
   padding: 14px 25px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-    border-radius: 25px;
+    border-radius: 12px;
     
+}
+
+@keyframes example {
+  from {border-radius: 12px;}
+  to {border-radius: 25px;}
 }
 
 a:hover, a:active {
   background-color: red;
-}
+  border-radius: 25px;
+  animation-name: example;
+  animation-duration: 0.5s;
+} a:hover
 </style>
+
+
+
+
+
     <h1>
         Hey, I'm Nicolai
     </h1>
     <body>
         <h2>About me</h2>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <p>
             I am a programmer.
         </p>
         <p>Contact me under: <a href="mailto:Nicolai@Balasus.eu" target="_blank">My Email</a> </p>
-    
+        <p>Or on Discord: <a href="https://discordapp.com/users/695312558986625054" target="_blank">My Discord</a> </p>
     </body>
 </html>
