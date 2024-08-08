@@ -1,14 +1,17 @@
 
 <html>
+<title>My Website</title>
+
+
     <style>
         body{
 font-family: arial;
-color: antiquewhite;
+color: #C2948A;
             flex-wrap: wrap;
-            background-color: darkslategrey;
+            background-color: #2f2f2f;
         }
 a:link, a:visited {
-  background-color: #f44336;
+  background-color: #C2948A;
   color: rgb(0, 0, 0);
   padding: 14px 25px;
   text-align: center;
@@ -19,32 +22,49 @@ a:link, a:visited {
 }
 
 @keyframes example {
-  from {border-radius: 12px;}
-  to {border-radius: 25px;}
+  from {border-radius: 12px; background-color:#5C91AD;}    
+  50%{border-radius: 25px; background-color:antiquewhite;}
+  to {border-radius: 12px; background-color:#5C91AD;}   
 }
 
 a:hover, a:active {
   background-color: red;
-  border-radius: 25px;
+
   animation-name: example;
   animation-duration: 0.5s;
 } a:hover
+
+
+
+
+
 </style>
 
-
-
-
-
+<style>
+header
+a:link, a:visited {
+  background-color: #7EA8BE;
+  color: rgb(0, 0, 0);
+  padding: 5px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+    border-radius: 12px;
+    
+}
+</style>
+<header>My Playlists <a href="/home/nicolai/Website/Playlists.html" target=_blank>Playlists</a>  My Music <a href="/home/nicolai/Website/Music.html" target=_blank>Music</a></header>
     <h1>
         Hey, I'm Nicolai
     </h1>
     <body>
         <h2>About me</h2>
         <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <p>
+      <b>  <p>
             I am a programmer.
         </p>
         <p>Contact me under: <a href="mailto:Nicolai@Balasus.eu" target="_blank">My Email</a> </p>
         <p>Or on Discord: <a href="https://discordapp.com/users/695312558986625054" target="_blank">My Discord</a> </p>
+        <p>My Spotify Playlists: <a href="/home/nicolai/Website/Playlists.html" target=_blank>Playlists</a> </p></b>
     </body>
 </html>
