@@ -1,0 +1,5 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+.gamma.app	TRUE	/	FALSE	1999999999	__cf_bm	QCAYEsx_Uq7uFAaHD.lOoxwhSlQn4N2_uXvtwaGuSK0-1742383641-1.0.1.1-SV4lMRbzaTF5z31ffnu7Cuu_CYa_k6fgZkPoOgjbfuS5_eMMcD4ESA6t4ayI1CQm2leyey.bHoyplxBXNZ5SPbEQYM92ATYujGUY6n5ityg
+imgproxy.gamma.app	TRUE	/	FALSE	1999999999	SameSite	None
+
