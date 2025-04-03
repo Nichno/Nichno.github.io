@@ -10,7 +10,7 @@
             text-align: center;
             margin-top: 50px;
         }
-        button { 
+        button {
             background-color: #4CAF50;
             color: white;
             padding: 15px 32px;
@@ -23,15 +23,79 @@
         button:hover {
             background-color: #45a049;
         }
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.proton {
+  width: 20%;
+  height: 20%;
+  background-color:;
+  border-radius: 50%;
+  position: center;
+}
+
+.electron {
+  width: 80%;
+  height: 80%;
+ 
+  position: absolute;
+  animation: rotation 3s infinite linear;
+  border-radius: 50%;
+  padding: 100px;
+  border: 0px solid silver;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+z-index: -1; 
+}
+
+.electron::before {
+  content: "";
+  width: 20%;
+  height: 20%;
+   background-image: url('pngegg.png'); /* Use your png as the electron */
+            background-size: contain; /* Ensure the image fits within the electron circle */
+            background-size: 100%; /* Adjust the percentage to make the image smaller */
+    background-repeat: no-repeat;
+    background-position: center; 
+  position: absolute;
+  left: -20px;
+  top: -20px;
+transform: translate(20%, 200%);
+ 
+  margin: 20px;
+z-index: -1; 
+}
+
+@keyframes rotation {
+  0% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+
     </style>
 </head>
 <body>
 
     <h1>Snus Roulette</h1>
     <p>Click the button to get a random snus product link:</p>
-    
+    <div class="proton">
     <button id="snusButton">Spin the Roulette!</button>
-
+  <div class="electron">
+</div>
+</div>
     <script>
         async function fetchSnusLinks() {
             const csvFilePath = 'snus-links.csv';
