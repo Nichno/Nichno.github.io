@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snus Roulette</title>
   <style>
     .container {
@@ -10,36 +10,76 @@
       text-align: center;
       padding: 16px;
       border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto;
     }
-
     h1 {
       font-size: 24px;
       font-weight: bold;
       padding: 8px;
     }
-
     h2 {
       font-size: 18px;
       font-weight: bold;
       padding: 8px;
     }
+    #url-link {
+      font-size: 16px;
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h1 id="title">Bagz: Arctic Freeze</h1>
-    <h2 id="subtitle">Random Snus Pick</h2>
-  <embed src="https://snuzone.com/products/bagz-arctic-freeze" style="width:500px; height: 300px;">
-</div>
+    <h1 id="title">Random Snus Pick</h1>
+    <h2 id="subtitle">Click the button to generate a random snus flavor!</h2>
+    <button onclick="generateRandomSnus()">Test Workflow</button>
+    <div id="snus-output"></div>
+    <div id="url-output">
+      <a id="url-link" href="#" target="_blank">Go to Snus Product Page</a>
+    </div>
+  </div>
+
   <script>
-    // Function to generate a random color
+    // Snus flavors data
+    const snusList = [
+      "Cuba: Apple Juice",
+      "Cuba: Black Peach",
+      "Cuba: Strawberry",
+      "Cuba: Peach",
+      "Cuba: Mint"
+    ];
+
+    // Function to pick a random snus and generate URL
+    function generateRandomSnus() {
+      // Randomly pick a snus flavor
+      const randomIndex = Math.floor(Math.random() * snusList.length);
+      const randomSnus = snusList[randomIndex];
+      document.getElementById("snus-output").innerText = randomSnus;
+
+      // Split the flavor into brand and flavor
+      const [brand, flavor] = randomSnus.split(":").map(part => part.trim());
+
+      // Format the flavor name for the URL (replace spaces with hyphens)
+      const formattedFlavor = flavor.toLowerCase().replace(/\s+/g, '-');
+
+      // Build the URL
+      const url = `https://snuzone.com/products/${brand.toLowerCase()}-${formattedFlavor}`;
+      document.getElementById("url-link").href = url;
+    }
+
+    // Apply random colors to title and subtitle
     function getRandomColor() {
       return '#' + Math.floor(Math.random() * 16777215).toString(16);
     }
 
-    // Apply random color to h1 and h2
     document.getElementById("title").style.color = getRandomColor();
     document.getElementById("subtitle").style.color = getRandomColor();
   </script>
+
 </body>
 </html>
+
