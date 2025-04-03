@@ -9,20 +9,25 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
+cursor: url("plurk-alt-svgrepo-com.cur"), auto;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 32px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
+       button {
+  position: relative;
+  z-index: 1; /* Ensure button is on top */
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 32px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  transition: transform 0.3s ease; /* Transition for rotation */
+  cursor: vertical-text, auto;}
+
+button:hover {
+transform: rotate(720deg);
+cursor: vertical-text;
+}
+        
 * {
   padding: 0;
   margin: 0;
@@ -35,6 +40,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+cursor: vertical-text;
 }
 
 .proton {
