@@ -1,173 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Snus Roulette</title>
-  <style>
-    .container {
-      background-color: #ffffff;
-      text-align: center;
-      padding: 16px;
-      border-radius: 8px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 24px;
-      font-weight: bold;
-      padding: 8px;
-    }
-    h2 {
-      font-size: 18px;
-      font-weight: bold;
-      padding: 8px;
-    }
-    #url-link {
-      font-size: 16px;
-      color: blue;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snus Flavor Links</title>
 </head>
 <body>
 
-  <div class="container">
-    <h1 id="title">Random Snus Pick</h1>
-    <h2 id="subtitle">Click the button to generate a random snus flavor!</h2>
-    <button onclick="generateRandomSnus()">Test Workflow</button>
-    <div id="snus-output"></div>
-    <div id="url-output">
-      <a id="url-link" href="#" target="_blank">Go to Snus Product Page</a>
-    </div>
-  </div>
+  <h1>Snus Flavor Links</h1>
+
+  <ul id="flavor-list">
+    <!-- Flavor list will be populated here -->
+  </ul>
 
   <script>
-    // Snus flavors data
-const flavorMapping = {
-  // Mapping with shortened and simplified versions
-  "Cuba: Apple Juice": "cuba-apple-juice",
-  "Cuba: Banana Hit": "cuba-banana-hit",
-  "Cuba: Black Currant": "cuba-black-currant",
-  "Cuba: Blueberry": "cuba-blueberry",
-  "Cuba: Cherry": "cuba-cherry",
-  "Cuba: Coca Leaf": "cuba-coca-leaf",
-  "Cuba: Cola": "cuba-cola",
-  "Cuba: Cold Dry": "cuba-cold-dry",
-  "Cuba: Forest Berries": "cuba-forest-berries",
-  "Cuba: Grape": "cuba-grape",
-  "Cuba: Peach": "cuba-peach",
-  "Cuba: Pineapple": "cuba-pineapple",
-  "Cuba: Watermelon": "cuba-watermelon",
-  "NOR: Ice Menthol": "nor-ice-menthol",
-  "NOR: Strawberry": "nor-strawberry",
-  "NOR: Coconut Pineapple": "nor-coconut-pineapple",
-  "NOR: Lemon Ice Tea": "nor-lemon-ice-tea",
-  "Camo: Spice Citrus": "camo-spice-citrus",
-  "Camo: Green Apple": "camo-green-apple",
-  "Camo: Wild Mint": "camo-wild-mint",
-  "Camo: Orange Bubblegum": "camo-orange-bubblegum",
-  "Camo: Peppermint": "camo-peppermint",
-  "Fix: Watermelon": "fix-watermelon",
-  "Fix: Mango": "fix-mango",
-  "Fix: Strawberry-Kiwi": "fix-strawberry-kiwi",
-  "Fix: Ruby Chocolate": "fix-ruby-chocolate",
-  "Fix: Pineapple Rum Coconut": "fix-pineapple-rum-coconut",
-  "Edel: Beere (Berry)": "edel-beere-berry",
-  "Edel: Classic": "edel-classic",
-  "Edel: Fruchtig (Fruity)": "edel-fruchtig-fruity",
-  "Edel: Klassisch (Classic)": "edel-klassisch-classic",
-  "Pablo: Ice Cold": "pablo-ice-cold",
-  "Pablo: Exclusive Lemonade": "pablo-exclusive-lemonade",
-  "Pablo: Exclusive Dark Cherry": "pablo-exclusive-dark-cherry",
-  "Pablo: Exclusive Strawberry Watermelon": "pablo-exclusive-strawberry-watermelon",
-  "Pablo: Exclusive Orange": "pablo-exclusive-orange",
-  "Pablo: Exclusive Cherry Cola": "pablo-exclusive-cherry-cola",
-  "Pablo: Exclusive Blue Raspberry": "pablo-exclusive-blue-raspberry",
-  "Pablo: Exclusive Tropical Punch": "pablo-exclusive-tropical-punch",
-  "Pablo: Exclusive Frosted Mint": "pablo-exclusive-frosted-mint",
-  "Velo: X-Freeze": "velo-x-freeze",
-  "Velo: Mighty Peppermint": "velo-mighty-peppermint",
-  "Velo: Ice Cool": "velo-ice-cool",
-  "Velo: Breezy Mango": "velo-breezy-mango",
-  "Velo: Spiffy Spearmint Mini": "velo-spiffy-spearmint-mini",
-  "Velo: Groovy Grape Mini": "velo-groovy-grape-mini",
-  "Kurwa: Blueberry": "kurwa-blueberry",
-  "Kurwa: Bubblegum": "kurwa-bubblegum",
-  "Kurwa: Fatality Grape Mint Waves": "kurwa-fatality-grape-mint-waves",
-  "Kurwa: Fatality Cola & Whisky": "kurwa-fatality-cola-whisky",
-  "Kurwa: Fatality Black Fruit Mint": "kurwa-fatality-black-fruit-mint",
-  "Kurwa: Fatality Apple Bubblegum": "kurwa-fatality-apple-bubblegum",
-  "Kurwa: To Go Eucalyptus Menthol": "kurwa-to-go-eucalyptus-menthol",
-  "Kurwa: To Go Ice Berry Mix": "kurwa-to-go-ice-berry-mix",
-  "Kurwa: To Go Ice Lemon Strawberry": "kurwa-to-go-ice-lemon-strawberry",
-  "Loop: Mint Mania": "loop-mint-mania",
-  "Loop: Salty Ludicris": "loop-salty-ludicris",
-  "Loop: Habanero Mint": "loop-habanero-mint",
-  "Zone: No13 Sweet Mint Slim Stark": "zone-no13-sweet-mint-slim-stark",
-  "Zone: No33 Juicy Peach Slim Strong": "zone-no33-juicy-peach-slim-strong",
-  "Zone: No5 Cool Mint Slim Ultra Stark": "zone-no5-cool-mint-slim-ultra-stark",
-  "Zone: No3 Cool Mint Slim Stark": "zone-no3-cool-mint-slim-stark",
-  "Zone: No25 Berry Blast Slim Ultra Stark": "zone-no25-berry-blast-slim-ultra-stark",
-  "Fedrs: #Hard Cherry Tobacco": "fedrs-hard-cherry-tobacco",
-  "Fedrs: #8 Frosty Cherry": "fedrs-8-frosty-cherry",
-  "Klint: Spicy Ginger X-Strong": "klint-spicy-ginger-x-strong",
-  "Klint: Lavender Mini": "klint-lavender-mini",
-  "Bagz: Arctic Freeze": "bagz-arctic-freeze",
-  "Bagz: Berry Cool": "bagz-berry-cool",
-  "Bagz: Chilli Lime": "bagz-chilli-lime",
-  "Bagz: Cola Max": "bagz-cola-max",
-  "Bagz: Fizzy Orange": "bagz-fizzy-orange",
-  "Bagz: Fruit Punch": "bagz-fruit-punch",
-  "Bagz: Mango Lassi": "bagz-mango-lassi",
-  "Bad Mojo: Arctic Evil": "bad-mojo-arctic-evil",
-  "Bad Mojo: Forbidden Fruit": "bad-mojo-forbidden-fruit",
-  "Bad Mojo: Frozen Forest": "bad-mojo-frozen-forest",
-  "Bad Mojo: Shining Redrum": "bad-mojo-shining-redrum",
-  "Grant: Spearmint": "grant-spearmint",
-  "Mafia: Apple-Lemon-Pear 25 mg": "mafia-apple-lemon-pear-25-mg",
-  "Mafia: Strawberry-Raspberry-Bubblegum 25 mg": "mafia-strawberry-raspberry-bubblegum-25-mg",
-  "Mafia: Cherry-Raspberry-Strawberry 25 mg": "mafia-cherry-raspberry-strawberry-25-mg"
-};
+    const flavorMapping = {
+      // Mapping with shortened and simplified versions
+      "Cuba: Apple Juice": "cuba-apple-juice",
+      "Cuba: Banana Hit": "cuba-banana-hit",
+      "Cuba: Black Currant": "cuba-black-currant",
+      "Cuba: Blueberry": "cuba-blueberry",
+      "Cuba: Cherry": "cuba-cherry",
+      "Cuba: Coca Leaf": "cuba-coca-leaf",
+      "Cuba: Cola": "cuba-cola",
+      "Cuba: Cold Dry": "cuba-cold-dry",
+      "Cuba: Forest Berries": "cuba-forest-berries",
+      "Cuba: Grape": "cuba-grape",
+      "Cuba: Peach": "cuba-peach",
+      "Cuba: Pineapple": "cuba-pineapple",
+      "Cuba: Watermelon": "cuba-watermelon",
+      "NOR: Ice Menthol": "nor-ice-menthol",
+      "NOR: Strawberry": "nor-strawberry",
+      "NOR: Coconut Pineapple": "nor-coconut-pineapple",
+      "NOR: Lemon Ice Tea": "nor-lemon-ice-tea",
+      "Camo: Spice Citrus": "camo-spice-citrus",
+      "Camo: Green Apple": "camo-green-apple",
+      "Camo: Wild Mint": "camo-wild-mint",
+      "Camo: Orange Bubblegum": "camo-orange-bubblegum",
+      "Camo: Peppermint": "camo-peppermint",
+      "Fix: Watermelon": "fix-watermelon",
+      "Fix: Mango": "fix-mango",
+      "Fix: Strawberry-Kiwi": "fix-strawberry-kiwi",
+      "Fix: Ruby Chocolate": "fix-ruby-chocolate",
+      "Fix: Pineapple Rum Coconut": "fix-pineapple-rum-coconut",
+      "Edel: Beere (Berry)": "edel-beere-berry",
+      "Edel: Classic": "edel-classic",
+      "Edel: Fruchtig (Fruity)": "edel-fruchtig-fruity",
+      "Edel: Klassisch (Classic)": "edel-klassisch-classic",
+      "Pablo: Ice Cold": "pablo-ice-cold",
+      "Pablo: Exclusive Lemonade": "pablo-exclusive-lemonade",
+      "Pablo: Exclusive Dark Cherry": "pablo-exclusive-dark-cherry",
+      "Pablo: Exclusive Strawberry Watermelon": "pablo-exclusive-strawberry-watermelon",
+      "Pablo: Exclusive Orange": "pablo-exclusive-orange",
+      "Pablo: Exclusive Cherry Cola": "pablo-exclusive-cherry-cola",
+      "Pablo: Exclusive Blue Raspberry": "pablo-exclusive-blue-raspberry",
+      "Pablo: Exclusive Tropical Punch": "pablo-exclusive-tropical-punch",
+      "Pablo: Exclusive Frosted Mint": "pablo-exclusive-frosted-mint",
+      "Velo: X-Freeze": "velo-x-freeze",
+      "Velo: Mighty Peppermint": "velo-mighty-peppermint",
+      "Velo: Ice Cool": "velo-ice-cool",
+      "Velo: Breezy Mango": "velo-breezy-mango",
+      "Velo: Spiffy Spearmint Mini": "velo-spiffy-spearmint-mini",
+      "Velo: Groovy Grape Mini": "velo-groovy-grape-mini",
+      "Kurwa: Blueberry": "kurwa-blueberry",
+      "Kurwa: Bubblegum": "kurwa-bubblegum",
+      "Kurwa: Fatality Grape Mint Waves": "kurwa-fatality-grape-mint-waves",
+      "Kurwa: Fatality Cola & Whisky": "kurwa-fatality-cola-whisky",
+      "Kurwa: Fatality Black Fruit Mint": "kurwa-fatality-black-fruit-mint",
+      "Kurwa: Fatality Apple Bubblegum": "kurwa-fatality-apple-bubblegum",
+      "Kurwa: To Go Eucalyptus Menthol": "kurwa-to-go-eucalyptus-menthol",
+      "Kurwa: To Go Ice Berry Mix": "kurwa-to-go-ice-berry-mix",
+      "Kurwa: To Go Ice Lemon Strawberry": "kurwa-to-go-ice-lemon-strawberry",
+      "Loop: Mint Mania": "loop-mint-mania",
+      "Loop: Salty Ludicris": "loop-salty-ludicris",
+      "Loop: Habanero Mint": "loop-habanero-mint",
+      "Zone: No13 Sweet Mint Slim Stark": "zone-no13-sweet-mint-slim-stark",
+      "Zone: No33 Juicy Peach Slim Strong": "zone-no33-juicy-peach-slim-strong",
+      "Zone: No5 Cool Mint Slim Ultra Stark": "zone-no5-cool-mint-slim-ultra-stark",
+      "Zone: No3 Cool Mint Slim Stark": "zone-no3-cool-mint-slim-stark",
+      "Zone: No25 Berry Blast Slim Ultra Stark": "zone-no25-berry-blast-slim-ultra-stark",
+      "Fedrs: #Hard Cherry Tobacco": "fedrs-hard-cherry-tobacco",
+      "Fedrs: #8 Frosty Cherry": "fedrs-8-frosty-cherry",
+      "Klint: Spicy Ginger X-Strong": "klint-spicy-ginger-x-strong",
+      "Klint: Lavender Mini": "klint-lavender-mini",
+      "Bagz: Arctic Freeze": "bagz-arctic-freeze",
+      "Bagz: Berry Cool": "bagz-berry-cool",
+      "Bagz: Chilli Lime": "bagz-chilli-lime",
+      "Bagz: Cola Max": "bagz-cola-max",
+      "Bagz: Fizzy Orange": "bagz-fizzy-orange",
+      "Bagz: Fruit Punch": "bagz-fruit-punch",
+      "Bagz: Mango Lassi": "bagz-mango-lassi",
+      "Bad Mojo: Arctic Evil": "bad-mojo-arctic-evil",
+      "Bad Mojo: Forbidden Fruit": "bad-mojo-forbidden-fruit",
+      "Bad Mojo: Frozen Forest": "bad-mojo-frozen-forest",
+      "Bad Mojo: Shining Redrum": "bad-mojo-shining-redrum",
+      "Grant: Spearmint": "grant-spearmint",
+      "Mafia: Apple-Lemon-Pear 25 mg": "mafia-apple-lemon-pear-25-mg",
+      "Mafia: Strawberry-Raspberry-Bubblegum 25 mg": "mafia-strawberry-raspberry-bubblegum-25-mg",
+      "Mafia: Cherry-Raspberry-Strawberry 25 mg": "mafia-cherry-raspberry-strawberry-25-mg"
+    };
 
-function generateSnusUrl(flavor) {
-  // Normalize flavor names and map to the correct product URL
-  const formattedFlavor = flavorMapping[flavor] || formatFlavorForUrl(flavor);
-  if (formattedFlavor) {
-    return `https://snuzone.com/products/${formattedFlavor}`;
-  } else {
-    return "Flavor not found.";
-  }
-}
-
-function formatFlavorForUrl(flavor) {
-  // Handle variations like removing words or simplifying
-  const lowercased = flavor.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '');
-  
-  // Example for handling specific variations:
-  if (lowercased.includes('strawberry') && lowercased.includes('basil')) {
-    return 'ace-x-straw-bas-mini'; // This handles your specific case
-  }
-  
-  return lowercased;
-}
-
-// Example usage
-const flavor = "ACE X Limited Strawberry Basil MINI";
-const snusUrl = generateSnusUrl(flavor);
-console.log(snusUrl); // Should output the correct URL based on the mapping
-
-
-    // Apply random colors to title and subtitle
-    function getRandomColor() {
-      return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    function generateSnusUrl(flavor) {
+      // Normalize flavor names and map to the correct product URL
+      const formattedFlavor = flavorMapping[flavor] || formatFlavorForUrl(flavor);
+      if (formattedFlavor) {
+        return `https://snuzone.com/products/${formattedFlavor}`;
+      } else {
+        return "Flavor not found.";
+      }
     }
 
-    document.getElementById("title").style.color = getRandomColor();
-    document.getElementById("subtitle").style.color = getRandomColor();
-  </script>
+    function formatFlavorForUrl(flavor) {
+      // Handle variations like removing words or simplifying
+      const lowercased = flavor.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '');
+      
+      // Example for handling specific variations:
+      if (lowercased.includes('strawberry') && lowercased.includes('basil')) {
+        return 'ace-x-straw-bas-mini'; // This handles your specific case
+      }
+      
+      return lowercased;
+    }
 
+    const flavors = [
+      "Cuba: Apple Juice",
+      "Cuba: Banana Hit",
+      "Cuba: Black Currant",
+      "Cuba: Blueberry",
+      "Cuba: Cherry",
+      "Cuba: Coca Leaf",
+      "Cuba: Cola",
+      "Cuba: Cold Dry",
+      "Cuba: Forest Berries",
+      "Cuba: Grape",
+      "Cuba: Peach",
+      "Cuba: Pineapple",
+      "Cuba: Watermelon",
+      "NOR: Ice Menthol",
+      "NOR: Strawberry",
+      "NOR: Coconut Pineapple",
+      "NOR: Lemon Ice Tea",
+      "Camo: Spice Citrus",
+      "Camo: Green Apple",
+      "Camo: Wild Mint",
+      "Camo: Orange Bubblegum",
+      "Camo: Peppermint",
+      "Fix: Watermelon",
+      "Fix: Mango",
+      "Fix: Strawberry-Kiwi",
+      "Fix: Ruby Chocolate",
+      "Fix: Pineapple Rum Coconut",
+      "Edel: Beere (Berry)",
+      "Edel: Classic",
+      "Edel: Fruchtig (Fruity)",
+      "Edel: Klassisch (Classic)",
+      "Pablo: Ice Cold",
+      "Pablo: Exclusive Lemonade",
+      "Pablo: Exclusive Dark Cherry",
+      "Pablo: Exclusive Strawberry Watermelon",
+      "Pablo: Exclusive Orange",
+      "Pablo: Exclusive Cherry Cola",
+      "Pablo: Exclusive Blue Raspberry",
+      "Pablo: Exclusive Tropical Punch",
+      "Pablo: Exclusive Frosted Mint",
+      "Velo: X-Freeze",
+      "Velo: Mighty Peppermint",
+      "Velo: Ice Cool",
+      "Velo: Breezy Mango",
+      "Velo: Spiffy Spearmint Mini",
+      "Velo: Groovy Grape Mini",
+      "Kurwa: Blueberry",
+      "Kurwa: Bubblegum",
+      "Kurwa: Fatality Grape Mint Waves",
+      "Kurwa: Fatality Cola & Whisky",
+      "Kurwa: Fatality Black Fruit Mint",
+      "Kurwa: Fatality Apple Bubblegum",
+      "Kurwa: To Go Eucalyptus Menthol",
+      "Kurwa: To Go Ice Berry Mix",
+      "Kurwa: To Go Ice Lemon Strawberry",
+      "Loop: Mint Mania",
+      "Loop: Salty Ludicris",
+      "Loop: Habanero Mint",
+      "Zone: No13 Sweet Mint Slim Stark",
+      "Zone: No33 Juicy Peach Slim Strong",
+      "Zone: No5 Cool Mint Slim Ultra Stark",
+      "Zone: No3 Cool Mint Slim Stark",
+      "Zone: No25 Berry Blast Slim Ultra Stark",
+      "Fedrs: #Hard Cherry Tobacco",
+      "Fedrs: #8 Frosty Cherry",
+      "Klint: Spicy Ginger X-Strong",
+      "Klint: Lavender Mini",
+      "Bagz: Arctic Freeze",
+      "Bagz: Berry Cool",
+      "Bagz: Chilli Lime",
+      "Bagz: Cola Max",
+      "Bagz: Fizzy Orange",
+      "Bagz: Fruit Punch",
+      "Bagz: Mango Lassi",
+      "Bad Mojo: Arctic Evil",
+      "Bad Mojo: Forbidden Fruit",
+      "Bad Mojo: Frozen Forest",
+      "Bad Mojo: Shining Redrum",
+      "Grant: Spearmint",
+      "Mafia: Apple-Lemon-Pear 25 mg",
+      "Mafia: Strawberry-Raspberry-Bubblegum 25 mg",
+      "Mafia: Cherry-Raspberry-Strawberry 25 mg"
+    ];
+
+    const flavorList = document.getElementById("flavor-list");
+
+    // Populate the list with flavor links
+    flavors.forEach(flavor => {
+      const listItem = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = generateSnusUrl(flavor);
+      link.textContent = flavor;
+      listItem.appendChild(link);
+      flavorList.appendChild(listItem);
+    });
+  </script>
 </body>
 </html>
-
