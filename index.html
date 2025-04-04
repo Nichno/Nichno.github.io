@@ -7,69 +7,69 @@
     <title>Snoulette</title>
     <style>
          @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+        
         body {
-             font-family: 'Orbitron', sans-serif;
+            font-family: 'Orbitron', sans-serif;
             text-align: center;
-            margin-top: 80px;
-            font-size: 40px;
+            margin-top: 10px;
+            font-size: 20px; /* Smaller font for mobile */
             background-image: url("background.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
             color: #ff0000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        button {
 
-            position: relative;
-            z-index: 1;
+        button {
             background-color: #ff0000;
             color: #ffff00;
-            padding: 15px 32px;
+            padding: 12px 24px; /* Adjusted for smaller screens */
+            font-size: 18px; /* Adjusted for readability */
             margin-top: 15px;
-            font-size: 16px;
-            font-family: 'Orbitron', sans-serif;
-            border: none;
             border-radius: 16px;
             transition: transform 0.3s ease;
-            cursor: vertical-text, auto;
-        }
-
-        button:hover {
-            transform: rotate(750deg) scale(2);
             cursor: pointer;
         }
 
-        * {
-            padding: 0;
-            margin: 0;
+        button:hover {
+            transform: rotate(750deg) scale(1.2);
+            cursor: pointer;
         }
 
-        body {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: bottom;
-            align-items: center;
-            
+        button:active {
+            transform: scale(1.2); /* Tap effect for mobile */
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px; /* Smaller font for mobile */
+            margin-top: 20px;
+            width: 85%; /* Adjusted width to be more fluid */
+            border-radius: 5px;
+            border-bottom: .2em solid #ffff00;
+            background: rgba(255, 0, 0, .4);
+            border-radius: 10px;
+            color: #000000;
         }
 
         .proton {
-            width: 20%;
-            height: 20%;
-            background-color:;
+            width: 25%; /* Reduced size for smaller screens */
+            height: 25%;
             border-radius: 50%;
             position: center;
         }
 
         .electron {
-            width: 80%;
-            height: 80%;
+            width: 60%; /* Reduced for better mobile fit */
+            height: 60%;
             position: absolute;
             animation: rotation 3s infinite linear;
             border-radius: 50%;
-            padding: 100px;
-            border: 0px solid silver;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
@@ -82,9 +82,6 @@
             height: 20%;
             background-image: url('pngegg.png');
             background-size: contain;
-            background-size: 100%;
-            background-repeat: no-repeat;
-            background-position: center;
             position: absolute;
             left: -20px;
             top: -20px;
@@ -99,23 +96,31 @@
             }
         }
 
-        input[type="text"] {
-            padding: 10px;
-            font-size: 18px;
-            margin-top: 20px;
-            border-radius: 5px;
-           
-            width: 80%;
-            
-	appearance: none;
-	border: none;
-	outline: none;
-	border-bottom: .2em solid #ffff00;
-	background: rgba(255,000,000, .4);
-	border-radius: 10px;
-	padding: .4em;
-	color: #000000;
+        /* Media queries for mobile */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px; /* Smaller font for mobile */
+                margin-top: 20px;
+            }
 
+            button {
+                font-size: 14px; /* Smaller button text */
+                padding: 10px 20px; /* Adjust padding for smaller screens */
+            }
+
+            input[type="text"] {
+                width: 90%; /* Make the input take up more space */
+            }
+
+            .proton {
+                width: 40%; /* Adjust proton size for mobile */
+                height: 40%;
+            }
+
+            .electron {
+                width: 80%; /* Adjust electron size for mobile */
+                height: 80%;
+            }
         }
     </style>
 </head>
@@ -147,21 +152,16 @@
             }
         }
 
+        const input = document.getElementById("searchInput");
 
- const input = document.getElementById("searchInput");
-
-  input.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      const value = input.value.trim().toLowerCase();
-      if (value === "easteregg") {
-        window.open("https://nichno.github.io/Website/east.html", "_blank");
-      }
-    }
-  });
-
-
-
-        
+        input.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                const value = input.value.trim().toLowerCase();
+                if (value === "easteregg") {
+                    window.open("https://nichno.github.io/Website/east.html", "_blank");
+                }
+            }
+        });
 
         async function randomizeSnus() {
             const searchTerm = document.getElementById("searchInput").value.toLowerCase();
