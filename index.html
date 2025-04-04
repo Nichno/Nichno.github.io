@@ -19,21 +19,24 @@
             color: #ff0000;
         }
         button {
+
             position: relative;
             z-index: 1;
-            background-color: #4CAF50;
-            color: white;
+            background-color: #ff0000;
+            color: #ffff00;
             padding: 15px 32px;
+            margin-top: 15px;
             font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
             border: none;
-            border-radius: 5px;
+            border-radius: 16px;
             transition: transform 0.3s ease;
             cursor: vertical-text, auto;
         }
 
         button:hover {
             transform: rotate(750deg) scale(2);
-            cursor: vertical-text;
+            cursor: pointer;
         }
 
         * {
@@ -48,7 +51,7 @@
             flex-direction: column;
             justify-content: bottom;
             align-items: center;
-            cursor: vertical-text;
+            
         }
 
         .proton {
@@ -101,8 +104,18 @@
             font-size: 18px;
             margin-top: 20px;
             border-radius: 5px;
-            border: 1px solid #ccc;
+           
             width: 80%;
+            
+	appearance: none;
+	border: none;
+	outline: none;
+	border-bottom: .2em solid #ffff00;
+	background: rgba(255,000,000, .2);
+	border-radius: 10px;
+	padding: .4em;
+	color: #ff0000;
+
         }
     </style>
 </head>
