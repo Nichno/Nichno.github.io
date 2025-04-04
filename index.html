@@ -133,19 +133,11 @@
         }
 
         async function randomizeSnus() {
-            const snusLinks = await fetchSnusLinks();
-            if (snusLinks && snusLinks.length > 0) {
-                const randomLink = snusLinks[Math.floor(Math.random() * snusLinks.length)];
-                window.open(randomLink, '_blank'); // Open the selected snus link in a new tab
-            } else {
-                alert("No snus links available!");
-            }
-        }
-
-        async function searchSnus() {
-            const snusLinks = await fetchSnusLinks();
             const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const snusLinks = await fetchSnusLinks();
+            
             if (snusLinks && snusLinks.length > 0) {
+                // Filter links based on the search term
                 const filteredLinks = snusLinks.filter(link => link.toLowerCase().includes(searchTerm));
                 if (filteredLinks.length > 0) {
                     const randomFilteredLink = filteredLinks[Math.floor(Math.random() * filteredLinks.length)];
@@ -159,7 +151,6 @@
         }
 
         document.getElementById("snusButton").onclick = randomizeSnus;
-        document.getElementById("searchInput").addEventListener('input', searchSnus);
     </script>
 
 </body>
