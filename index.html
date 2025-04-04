@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snus Roulette</title>
+    <title>Snoulette</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
-cursor: url("plurk-alt-svgrepo-com.cur"), auto;
+background-image: url("background.jpg");
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center;
+color: #e6e6e6;
         }
        button {
   position: relative;
@@ -24,7 +28,7 @@ cursor: url("plurk-alt-svgrepo-com.cur"), auto;
   cursor: vertical-text, auto;}
 
 button:hover {
-transform: rotate(720deg);
+transform: rotate(750deg) scale(2);;
 cursor: vertical-text;
 }
         
@@ -95,10 +99,10 @@ z-index: -1;
 </head>
 <body>
 
-    <h1>Snus Roulette</h1>
+    <h1>Snoulette</h1>
     <p>Click the button to get a random snus product link:</p>
     <div class="proton">
-    <button id="snusButton">Spin the Roulette!</button>
+    <button id="snusButton">Spin the Snoulette!</button>
   <div class="electron">
 </div>
 </div>
