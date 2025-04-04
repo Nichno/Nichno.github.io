@@ -132,35 +132,22 @@
             }
         }
 
-       async function randomizeSnus() {
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-    const snusLinks = await fetchSnusLinks();
-
-    if (snusLinks && snusLinks.length > 0) {
-        let filteredLinks = snusLinks.filter(link => link.toLowerCase().includes(searchTerm));
-
-        // Ensure the secret link appears when searching "secret"
-        const secretLink = "https://nichno.github.io/Website/east.html";
-        if (searchTerm === "secret" && !filteredLinks.includes(secretLink)) {
-            filteredLinks.push(secretLink);
-        }
-
-        // If the user entered nothing, use all links
-        if (filteredLinks.length === 0 && searchTerm === "") {
-            filteredLinks = snusLinks;
-        }
-
-        if (filteredLinks.length > 0) {
-            const randomFilteredLink = filteredLinks[Math.floor(Math.random() * filteredLinks.length)];
-            window.open(randomFilteredLink, '_blank');
-        } else {
-            alert("No snus links found matching your search!");
-        }
-    } else {
-        alert("No snus links available!");
-    }
-}
-
+        async function randomizeSnus() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const snusLinks = await fetchSnusLinks();
+            
+            if (snusLinks && snusLinks.length > 0) {
+                // Filter links based on the search term
+                const filteredLinks = snusLinks.filter(link => link.toLowerCase().includes(searchTerm));
+                if (filteredLinks.length > 0) {
+                    const randomFilteredLink = filteredLinks[Math.floor(Math.random() * filteredLinks.length)];
+                    window.open(randomFilteredLink, '_blank'); // Open the matching snus link in a new tab
+                } else {
+                    alert("No snus links found matching your search!");
+                }
+            } else {
+                alert("No snus links available!");
+            }
         }
 
         document.getElementById("snusButton").onclick = randomizeSnus;
