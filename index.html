@@ -9,108 +9,115 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 80px;
-font-size: 40px;
-background-image: url("background.jpg");
-    background-size:     cover;                      /* <------ */
-    background-repeat:   no-repeat;
-    background-position: center center;
-color: #ff0000;
+            font-size: 40px;
+            background-image: url("background.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #ff0000;
         }
-       button {
-  position: relative;
-  z-index: 1; /* Ensure button is on top */
-  background-color: #4CAF50;
-  color: white;
-  padding: 15px 32px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  transition: transform 0.3s ease; /* Transition for rotation */
-  cursor: vertical-text, auto;}
+        button {
+            position: relative;
+            z-index: 1;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+            cursor: vertical-text, auto;
+        }
 
-button:hover {
-transform: rotate(750deg) scale(2);;
-cursor: vertical-text;
-}
-        
-* {
-  padding: 0;
-  margin: 0;
-}
+        button:hover {
+            transform: rotate(750deg) scale(2);
+            cursor: vertical-text;
+        }
 
-body {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: bottom;
-  align-items: center;
-cursor: vertical-text;
-}
+        * {
+            padding: 0;
+            margin: 0;
+        }
 
-.proton {
-  width: 20%;
-  height: 20%;
-  background-color:;
-  border-radius: 50%;
-  position: center;
-}
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: bottom;
+            align-items: center;
+            cursor: vertical-text;
+        }
 
-.electron {
-  width: 80%;
-  height: 80%;
- 
-  position: absolute;
-  animation: rotation 3s infinite linear;
-  border-radius: 50%;
-  padding: 100px;
-  border: 0px solid silver;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-z-index: -1; 
-}
+        .proton {
+            width: 20%;
+            height: 20%;
+            background-color:;
+            border-radius: 50%;
+            position: center;
+        }
 
-.electron::before {
-  content: "";
-  width: 20%;
-  height: 20%;
-   background-image: url('pngegg.png'); /* Use your png as the electron */
-            background-size: contain; /* Ensure the image fits within the electron circle */
-            background-size: 100%; /* Adjust the percentage to make the image smaller */
-    background-repeat: no-repeat;
-    background-position: center; 
-  position: absolute;
-  left: -20px;
-  top: -20px;
-transform: translate(20%, 200%);
- 
-  margin: 20px;
-z-index: -1; 
-}
+        .electron {
+            width: 80%;
+            height: 80%;
+            position: absolute;
+            animation: rotation 3s infinite linear;
+            border-radius: 50%;
+            padding: 100px;
+            border: 0px solid silver;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
 
-@keyframes rotation {
-  0% {
-    transform: translate(-50%, -50%) rotate(-360deg);
-  }
-}
+        .electron::before {
+            content: "";
+            width: 20%;
+            height: 20%;
+            background-image: url('pngegg.png');
+            background-size: contain;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            transform: translate(20%, 200%);
+            margin: 20px;
+            z-index: -1;
+        }
 
+        @keyframes rotation {
+            0% {
+                transform: translate(-50%, -50%) rotate(-360deg);
+            }
+        }
 
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+        }
     </style>
 </head>
 <body>
 
     <h1 style="background-color: #FF0000; color: #ffff00;">Snoulette</h1>
     <p style="background-color: #FFFF00;">Click the button to get a random snus product link:</p>
+    <input type="text" id="searchInput" placeholder="Search for a snus product...">
     <div class="proton">
-    <button id="snusButton">Spin the Snoulette!</button>
-  <div class="electron">
-</div>
-</div>
+        <button id="snusButton">Spin the Snoulette!</button>
+    </div>
+    <div class="electron"></div>
+
     <script>
         async function fetchSnusLinks() {
             const csvFilePath = 'snus-links.csv';
- // path to your uploaded CSV on the server
+            // path to your uploaded CSV on the server
             try {
                 const response = await fetch(csvFilePath);
                 if (!response.ok) {
@@ -135,7 +142,24 @@ z-index: -1;
             }
         }
 
+        async function searchSnus() {
+            const snusLinks = await fetchSnusLinks();
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            if (snusLinks && snusLinks.length > 0) {
+                const filteredLinks = snusLinks.filter(link => link.toLowerCase().includes(searchTerm));
+                if (filteredLinks.length > 0) {
+                    const randomFilteredLink = filteredLinks[Math.floor(Math.random() * filteredLinks.length)];
+                    window.open(randomFilteredLink, '_blank'); // Open the matching snus link in a new tab
+                } else {
+                    alert("No snus links found matching your search!");
+                }
+            } else {
+                alert("No snus links available!");
+            }
+        }
+
         document.getElementById("snusButton").onclick = randomizeSnus;
+        document.getElementById("searchInput").addEventListener('input', searchSnus);
     </script>
 
 </body>
