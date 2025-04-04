@@ -1,18 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNOULETTE EASTER FUCKER</title></head>
-<img src="easter-egg.jpg">
-<img src="easter-egg-2.jpg">
-<audio>
-  <audio src="hardstyle.mp3" controls="true" class="audio-2">
-</audio>
-    
-<audio class="audio-1" src="DnB1.mp3" controls="true">
-</audio>
-  <audio> <source class="audio-1" src="Techno.mp3" type="audio/mpeg"></audio>
-<h1>YOU FOUND AN EASTER EGG, THAMNKS FOR USING MY wElL CODED WEBSITE, MUCH FUN WITH UR SNUSSSSsss</h1>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNOULETTE EASTER FUCKER</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
 
+    body {
+      margin: 0;
+      background: linear-gradient(45deg, #0f0f0f, #1a1a1a);
+      color: #00ffea;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      animation: bgPulse 5s infinite alternate;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-top: 2rem;
+      text-shadow: 0 0 10px #ff00f7, 0 0 20px #00ffe1;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    img {
+      width: 300px;
+      margin: 10px;
+      border: 4px solid #00ffe1;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ff00f7;
+      animation: shake 3s infinite ease-in-out;
+    }
+
+    audio {
+      margin: 20px;
+      filter: drop-shadow(0 0 10px #00ffea);
+      transform: scale(1.1);
+    }
+
+    @keyframes bgPulse {
+      from {
+        background-color: #0f0f0f;
+      }
+      to {
+        background-color: #2b0033;
+      }
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #ff00f7, 0 0 10px #00ffe1;
+      }
+      to {
+        text-shadow: 0 0 20px #ff00f7, 0 0 30px #00ffe1;
+      }
+    }
+
+    @keyframes shake {
+      0% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+      100% { transform: rotate(-1deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <img src="easter-egg.jpg" alt="Easter Egg 1">
+    <img src="easter-egg-2.jpg" alt="Easter Egg 2">
+  </div>
+
+  <div>
+    <audio src="hardstyle.mp3" controls class="audio-2"></audio>
+    <audio src="DnB1.mp3" controls class="audio-1"></audio>
+    <audio controls class="audio-1">
+      <source src="Techno.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <h1>YOU FOUND AN EASTER EGG, THANKS FOR USING MY wElL CODED WEBSITE,<br>MUCH FUN WITH UR SNUSSSSsss 💀🔥</h1>
+
+</body>
 </html>
