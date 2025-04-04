@@ -17,16 +17,18 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
-            color: #ff0000;
+            color: #00ffea;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+	    animation: bgPulse 5s infinite alternate;
+	    animation: glow 5s infinite alternate;
         }
 
         button {
-            background-color: #ff0000;
+            background-color: #330033;
             color: #ffff00;
             padding: 12px 24px; /* Adjusted for smaller screens */
             font-size: 18px; /* Adjusted for readability */
@@ -37,8 +39,11 @@
         }
 
         button:hover {
-            transform: rotate(750deg) scale(1.2);
+            transform: rotate(20deg) scale(1.2);
             cursor: pointer;
+	    animation: bgPulse 0.5s infinite alternate;
+	    animation: glow 0.5s infinite alternate;
+
         }
 
         button:active {
@@ -52,9 +57,9 @@
             width: 85%; /* Adjusted width to be more fluid */
             border-radius: 5px;
             border-bottom: .2em solid #ffff00;
-            background: rgba(255, 0, 0, .4);
+            background: rgba(0, 128, 128, .4);
             border-radius: 10px;
-            color: #000000;
+            color: #ffff00;
         }
 
         .proton {
@@ -122,12 +127,49 @@
                 height: 80%;
             }
         }
+
+
+
+h1 {
+  font-size: 2.5rem;
+  margin-top: 2rem;
+  text-shadow: 0 0 10px #ff00f7, 0 0 20px #00ffe1;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes bgPulse {
+  from {
+    background-color: #0f0f0f;
+  }
+  to {
+    background-color: #2b0033;
+  }
+}
+
+
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #ff00f7, 0 0 20px #00ffe1;
+  }
+  to {
+    text-shadow: 0 0 20px #ff00f7, 0 0 50px #00ffe1;
+  }
+}
+
+@keyframes shake {
+  0% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+
     </style>
 </head>
 <body>
 
-    <h1 style="background-color: #FF0000; color: #ffff00;">Snoulette</h1>
-    <p style="background-color: #FFFF00;">Click the button to get a random snus product link:</p>
+    <h1 style="color: #ffff00;">Snoulette</h1>
+    <p style="">Click the button to get a random snus product link:</p>
     <input type="text" id="searchInput" placeholder="Filter the Randomness, giv it a try, and enter ur favorite brand">
     <div class="proton">
         <button id="snusButton">Spin the Snoulette!</button>
