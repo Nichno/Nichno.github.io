@@ -1,229 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="https://cdn.discordapp.com/attachments/918554474308591669/1357814789174202500/87962_0_0.png?ex=67f19310&amp;is=67f04190&amp;hm=a98607477d08018a422f7275a0904ced55a3c623a0002dd65fca2ee2d927e4b1&amp;" type="image/svg+xml">
+    <link rel="icon" href="https://cdn.discordapp.com/attachments/918554474308591669/1357814789174202500/87962_0_0.png" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snoulette</title>
     <style>
-         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-        
-        body {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 20px; /* Smaller font for mobile */
-            background-image: url("background.jpg");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
-            color: #00ffea;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-	    animation: bgPulse 5s infinite alternate;
-	    animation: glow 5s infinite alternate;
-        }
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
 
-        button {
-            background-color: #330033;
-            color: #ffff00;
-            padding: 12px 24px; /* Adjusted for smaller screens */
-            font-size: 18px; /* Adjusted for readability */
-            margin-top: 15px;
-            border-radius: 16px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        button:hover {
-            transform: rotate(40deg) scale(2.5);
-            cursor: pointer;
-	    animation: bgPulse 0.5s infinite alternate;
-	    animation: glow 0.5s infinite alternate;
-
-        }
-
-        button:active {
-            transform: scale(1.2); /* Tap effect for mobile */
-        }
-
-        input[type="text"] {
-            padding: 10px;
-            font-size: 16px; /* Smaller font for mobile */
-            margin-top: 20px;
-            width: 85%; /* Adjusted width to be more fluid */
-            border-radius: 5px;
-            border-bottom: .2em solid #ffff00;
-            background: rgba(0, 128, 128, .4);
-            border-radius: 10px;
-            color: #ffff00;
-        }
-
-        .proton {
-            width: 25%; /* Reduced size for smaller screens */
-            height: 25%;
-            border-radius: 50%;
-            position: center;
-        }
-
-        .electron {
-            width: 60%; /* Reduced for better mobile fit */
-            height: 60%;
-            position: absolute;
-            animation: rotation 3s infinite linear;
-            border-radius: 50%;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-        }
-
-        .electron::before {
-            content: "";
-            width: 20%;
-            height: 20%;
-            background-image: url('pngegg.png');
-            background-size: contain;
-            position: absolute;
-            left: -20px;
-            top: -20px;
-            transform: translate(20%, 200%);
-            margin: 20px;
-            z-index: -1;
-        }
-
-        @keyframes rotation {
-            0% {
-                transform: translate(-50%, -50%) rotate(-360deg);
-            }
-        }
-
-        /* Media queries for mobile */
-        @media (max-width: 768px) {
-            body {
-                font-size: 16px; /* Smaller font for mobile */
-                margin-top: 20px;
-            }
-
-            button {
-                font-size: 14px; /* Smaller button text */
-                padding: 10px 20px; /* Adjust padding for smaller screens */
-            }
-
-            input[type="text"] {
-                width: 90%; /* Make the input take up more space */
-            }
-
-            .proton {
-                width: 40%; /* Adjust proton size for mobile */
-                height: 40%;
-            }
-
-            .electron {
-                width: 80%; /* Adjust electron size for mobile */
-                height: 80%;
-            }
-        }
-
-
+body {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 20px;
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    color: #00ffea;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    animation: bgPulse 5s infinite alternate, glow 5s infinite alternate;
+}
 
 h1 {
-  font-size: 2.5rem;
-  margin-top: 2rem;
-  text-shadow: 0 0 10px #ff00f7, 0 0 20px #00ffe1;
-  animation: glow 1.5s infinite alternate;
+    font-size: 2.5rem;
+    margin-top: 2rem;
+    text-shadow: 0 0 10px #ff00f7, 0 0 20px #00ffe1;
+    animation: glow 1.5s infinite alternate;
+    color: #ffff00;
+}
+
+button {
+    background-color: #330033;
+    color: #ffff00;
+    padding: 12px 24px;
+    font-size: 18px;
+    margin-top: 15px;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: rotate(20deg) scale(1.2);
+    animation: bgPulse 0.5s infinite alternate, glow 0.5s infinite alternate;
+}
+
+button:active {
+    transform: scale(1.2);
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 20px;
+    width: 85%;
+    background: rgba(0, 128, 128, .4);
+    border: none;
+    border-bottom: .2em solid #ffff00;
+    border-radius: 10px;
+    color: #ffff00;
+}
+
+.proton {
+    width: 25%;
+    height: 25%;
+    border-radius: 50%;
+}
+
+.electron {
+    width: 60%;
+    height: 60%;
+    position: absolute;
+    animation: rotation 3s infinite linear;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.electron::before {
+    content: "";
+    width: 20%;
+    height: 20%;
+    background-image: url('pngegg.png');
+    background-size: contain;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    transform: translate(20%, 200%);
+    margin: 20px;
+    z-index: -1;
+}
+
+@keyframes rotation {
+    0% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
 }
 
 @keyframes bgPulse {
-  from {
-    background-color: #0f0f0f;
-  }
-  to {
-    background-color: #2b0033;
-  }
+    from {
+        background-color: #0f0f0f;
+    }
+    to {
+        background-color: #2b0033;
+    }
 }
-
-
 
 @keyframes glow {
-  from {
-    text-shadow: 0 0 5px #ff00f7, 0 0 20px #00ffe1;
-  }
-  to {
-    text-shadow: 0 0 20px #ff00f7, 0 0 50px #00ffe1;
-  }
+    from {
+        text-shadow: 0 0 5px #ff00f7, 0 0 20px #00ffe1;
+    }
+    to {
+        text-shadow: 0 0 20px #ff00f7, 0 0 50px #00ffe1;
+    }
 }
 
-@keyframes shake {
-  0% { transform: rotate(-1deg); }
-  50% { transform: rotate(1deg); }
-  100% { transform: rotate(-1deg); }
+a {
+    color: #00ddea;;
+}
+
+ol {
+    padding-left: 50px;
+}
+
+li {
+    color: #ff0000;
+    padding-left: 16px;
+    margin-top: 24px;
+    position: relative;
+    font-size: 16px;
+    line-height: 20px;
 }
 
 
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+
+}
+
+.list-section {
+    flex: 1;
+    min-width: 300px;
+    text-align: left;
+background-color: rgba(0, 0, 0, 0.8);
+border-radius: 10px;
+}
+
+.right-section {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    input[type="text"] {
+        width: 90%;
+    }
+
+    .proton {
+        width: 40%;
+        height: 40%;
+    }
+
+    .electron {
+        width: 80%;
+        height: 80%;
+    }
+}
     </style>
 </head>
 <body>
 
-    <h1 style="color: #ffff00;">Snoulette</h1>
-    <p style="">Click the button to get a random snus product link:</p>
+<div class="main-content">
+
+
+  <div class="list-section">
+    <ol class="alternating-colors">
+<h2>Developers Favorites</h2>
+      <li>
+        <a href="https://snuzone.com/products/velo-groovy-grape">Velo Groovy Grape Mini</a>
+        <p>Fruity, Flavorinstensitive, Nice For Beginners</p>
+      </li>
+      <li>
+        <a href="https://snuzone.com/products/edel-snus-melon">Edel Melon</a>
+        <p>Relaxing but nice, tropical</p>
+      </li>
+      <li>
+        <a href="https://snuzone.com/products/baow-gin-tonic">Baow Gin & Tonic</a>
+        <p>Like a Coctail, Punchy, Fruity, Iconic</p>
+      </li>
+  <li>
+  <a href="https://snuzone.com/products/chainpop-raspberry-lemon">Chainpop Raspberry & Lemon</a>
+        <p>High Quality also fruity, nice for Summer</p>
+      </li>
+
+    </ol>
+  </div>
+
+  <div class="right-section">
+
+
+
+
+    <h1>Snoulette</h1>
+    <p>Click the button to get a random snus product link:</p>
     <input type="text" id="searchInput" placeholder="Filter the Randomness, giv it a try, and enter ur favorite brand">
     <div class="proton">
-        <button id="snusButton">Spin the Snoulette!</button>
+      <button id="snusButton">Spin the Snoulette!</button>
     </div>
-    <div class="electron"></div>
+  </div>
+</div>
 
-    <script>
-        async function fetchSnusLinks() {
-            const csvFilePath = 'snus-links.csv';
-            // path to your uploaded CSV on the server
-            try {
-                const response = await fetch(csvFilePath);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch CSV');
-                }
-                const text = await response.text();
-                const rows = text.split('\n');
-                const snusLinks = rows.map(row => row.trim()).filter(row => row.length > 0);
-                return snusLinks;
-            } catch (error) {
-                console.error('Error fetching data:', error);
+<div class="electron"></div>
+
+<script>
+    async function fetchSnusLinks() {
+        const csvFilePath = 'snus-links.csv';
+        try {
+            const response = await fetch(csvFilePath);
+            if (!response.ok) throw new Error('Failed to fetch CSV');
+            const text = await response.text();
+            const rows = text.split('\n');
+            const snusLinks = rows.map(row => row.trim()).filter(row => row.length > 0);
+            return snusLinks;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    const input = document.getElementById("searchInput");
+
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            const value = input.value.trim().toLowerCase();
+            if (value === "easteregg") {
+                window.open("https://nichno.github.io/Website/east.html", "_blank");
             }
         }
+    });
 
-        const input = document.getElementById("searchInput");
-
-        input.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                const value = input.value.trim().toLowerCase();
-                if (value === "easteregg") {
-                    window.open("https://nichno.github.io/east", "_blank");
-                }
-            }
-        });
-
-        async function randomizeSnus() {
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-            const snusLinks = await fetchSnusLinks();
-            
-            if (snusLinks && snusLinks.length > 0) {
-                // Filter links based on the search term
-                const filteredLinks = snusLinks.filter(link => link.toLowerCase().includes(searchTerm));
-                if (filteredLinks.length > 0) {
-                    const randomFilteredLink = filteredLinks[Math.floor(Math.random() * filteredLinks.length)];
-                    window.open(randomFilteredLink, '_blank'); // Open the matching snus link in a new tab
-                } else {
-                    alert("No snus links found matching your search!");
-                }
+    async function randomizeSnus() {
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+        const snusLinks = await fetchSnusLinks();
+        if (snusLinks && snusLinks.length > 0) {
+            const filteredLinks = snusLinks.filter(link => link.toLowerCase().includes(searchTerm));
+            if (filteredLinks.length > 0) {
+                const randomFilteredLink = filteredLinks[Math.floor(Math.random() * filteredLinks.length)];
+                window.open(randomFilteredLink, '_blank');
             } else {
-                alert("No snus links available!");
+                alert("No snus links found matching your search!");
             }
+        } else {
+            alert("No snus links available!");
         }
+    }
 
-        document.getElementById("snusButton").onclick = randomizeSnus;
-    </script>
+    document.getElementById("snusButton").onclick = randomizeSnus;
+</script>
 
 </body>
 </html>
+s
