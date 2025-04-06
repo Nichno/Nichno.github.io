@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <link rel="icon" href="logo.png" type="image/svg+xml">
+    <link rel="prefetch" href="lightdesign.html">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snoulette</title>
@@ -34,6 +35,24 @@ h1 {
     animation: glow 1.5s infinite alternate;
     color: #ffff00;
 }
+
+
+#designSwitchBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    z-index: 1000;
+    transition: background 0.3s;
+  }
+
+  #designSwitchBtn:hover {
+    background-color: #333;
+  }
 
 button {
     background-color: #330033;
@@ -240,6 +259,7 @@ border-radius: 10px;
     <input type="text" id="searchInput" placeholder="Filter the Randomness, giv it a try, and enter ur favorite brand">
     <div class="proton">
       <button id="snusButton">Spin the Snoulette!</button>
+      <a href="alt-design.html" id="designSwitchBtn">Switch Design</a>
     </div>
   </div>
 </div>
