@@ -66,7 +66,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 my-8 flex flex-col h-[80vh]">
         <!-- Header -->
         <div class="bg-gray-800 text-white p-4 rounded-t-2xl flex justify-between items-center">
-            <h1 class="text-xl font-bold">Globaler Chat</h1>
+            <h1 class="text-xl font-bold">Öffentlicher Chat</h1>
             <div class="flex items-center gap-2">
                 <div id="userIdDisplay" class="text-sm font-medium bg-gray-700 px-3 py-1 rounded-full truncate"></div>
             </div>
@@ -89,15 +89,14 @@
             </button>
         </div>
     </div>
-
-    <!-- Firebase SDKs importieren -->
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        
+
         // Füge hier deine Firebase-Konfiguration ein
-        
+       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyADKgGaaGdHHcWKAtH4pJGCZapM8I41B5U",
   authDomain: "fleechat-fl.firebaseapp.com",
@@ -107,121 +106,106 @@ const firebaseConfig = {
   appId: "1:214996190833:web:296933a890aab1e2483dd0",
   measurementId: "G-SGMZXWTLSM"
 };
-        
-        // Nur initialisieren, wenn die Konfiguration vorhanden ist
-        if (Object.keys(firebaseConfig).length > 0) {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            const auth = getAuth(app);
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let username = localStorage.getItem('username');
+        let currentUserId = null;
+
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const userIdDisplay = document.getElementById('userIdDisplay');
+        const usernameModal = document.getElementById('usernameModal');
+        const usernameInput = document.getElementById('usernameInput');
+        const saveUsernameBtn = document.getElementById('saveUsernameBtn');
+
+        // Funktion zur Anzeige einer Nachricht in der UI
+        const displayMessage = (msg, isSentByMe) => {
+            const messageElement = document.createElement('div');
+            messageElement.className = `flex ${isSentByMe ? 'justify-end' : 'justify-start'}`;
+
+            const senderName = isSentByMe ? 'Du' : msg.username;
+            const messageTime = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : new Date().toLocaleTimeString();
             
-            // Benutzer anonym anmelden
-            signInAnonymously(auth).catch(console.error);
+            messageElement.innerHTML = `
+                <div class="message-bubble ${isSentByMe ? 'sent-message' : 'received-message'}">
+                    <div>${msg.text}</div>
+                    <div class="text-xs ${isSentByMe ? 'text-gray-200' : 'text-gray-500'} mt-1">
+                        <span class="font-medium">${senderName}:</span>
+                        <span class="ml-1">${messageTime}</span>
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        };
+
+        // Firebase Authentifizierung und Chat-Listener initialisieren
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                userIdDisplay.textContent = `Nutzer: ${username || 'Anonym'}`;
+                // Chat-Nachrichten in Echtzeit von Firestore abrufen
+                const q = query(collection(db, "global-chats"), orderBy("timestamp"));
+                onSnapshot(q, (querySnapshot) => {
+                    messagesContainer.innerHTML = '';
+                    querySnapshot.forEach((doc) => {
+                        const messageData = doc.data();
+                        const isSentByMe = messageData.userId === currentUserId;
+                        displayMessage(messageData, isSentByMe);
+                    });
+                });
+            } else {
+                // Wenn kein Benutzer angemeldet ist, melde ihn anonym an
+                signInAnonymously(auth).catch(console.error);
+            }
+        });
+
+        // Username-Modal anzeigen, wenn kein Name gespeichert ist
+        if (!username) {
+            usernameModal.classList.remove('hidden');
         } else {
-            console.error("Firebase Konfiguration fehlt. Bitte fügen Sie Ihre Konfiguration ein, um den Chat zu aktivieren.");
+            userIdDisplay.textContent = `Nutzer: ${username}`;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const messagesContainer = document.getElementById('messagesContainer');
-            const messageInput = document.getElementById('messageInput');
-            const sendButton = document.getElementById('sendButton');
-            const userIdDisplay = document.getElementById('userIdDisplay');
-            const usernameModal = document.getElementById('usernameModal');
-            const usernameInput = document.getElementById('usernameInput');
-            const saveUsernameBtn = document.getElementById('saveUsernameBtn');
-
-            let username = localStorage.getItem('username');
-            let db;
-
-            // Funktion zur Anzeige einer Nachricht in der UI
-            const displayMessage = (msg, isSentByMe) => {
-                const messageElement = document.createElement('div');
-                messageElement.className = `flex ${isSentByMe ? 'justify-end' : 'justify-start'}`;
-
-                const senderName = isSentByMe ? 'Du' : msg.username;
-                const messageTime = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : new Date().toLocaleTimeString();
-
-                messageElement.innerHTML = `
-                    <div class="message-bubble ${isSentByMe ? 'sent-message' : 'received-message'}">
-                        <div>${msg.text}</div>
-                        <div class="text-xs ${isSentByMe ? 'text-gray-200' : 'text-gray-500'} mt-1">
-                            <span class="font-medium">${senderName}:</span>
-                            <span class="ml-1">${messageTime}</span>
-                        </div>
-                    </div>
-                `;
-                messagesContainer.appendChild(messageElement);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            };
-
-            // Username-Modal anzeigen, wenn kein Name gespeichert ist
-            if (!username) {
-                usernameModal.classList.remove('hidden');
-            } else {
+        // Username speichern und Modal schließen
+        saveUsernameBtn.addEventListener('click', () => {
+            const newUsername = usernameInput.value.trim();
+            if (newUsername) {
+                username = newUsername;
+                localStorage.setItem('username', username);
                 userIdDisplay.textContent = `Nutzer: ${username}`;
+                usernameModal.classList.add('hidden');
             }
+        });
 
-            // Username speichern und Modal schließen
-            saveUsernameBtn.addEventListener('click', () => {
-                const newUsername = usernameInput.value.trim();
-                if (newUsername) {
-                    username = newUsername;
-                    localStorage.setItem('username', username);
-                    userIdDisplay.textContent = `Nutzer: ${username}`;
-                    usernameModal.classList.add('hidden');
-                }
-            });
-
-            // Funktion zum Senden einer Nachricht
-            const sendMessage = async () => {
-                const text = messageInput.value.trim();
-                if (text && username && db) {
-                    const messagesCollection = collection(db, "public-chats");
-                    try {
-                        await addDoc(messagesCollection, {
-                            username: username,
-                            text: text,
-                            timestamp: serverTimestamp()
-                        });
-                        messageInput.value = '';
-                    } catch (e) {
-                        console.error("Fehler beim Senden der Nachricht: ", e);
-                    }
-                }
-            };
-
-            // Event-Listener für das Senden von Nachrichten
-            sendButton.addEventListener('click', sendMessage);
-            messageInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-
-            // Nachrichten in Echtzeit von Firestore abrufen
-            function startChatListener() {
-                if (db) {
-                    const messagesCollection = collection(db, "public-chats");
-                    const q = query(messagesCollection, orderBy("timestamp"));
-                    onSnapshot(q, (querySnapshot) => {
-                        messagesContainer.innerHTML = ''; // Vorherige Nachrichten löschen
-                        querySnapshot.forEach((doc) => {
-                            const messageData = doc.data();
-                            const isSentByMe = messageData.username === username;
-                            displayMessage(messageData, isSentByMe);
-                        });
+        // Funktion zum Senden einer Nachricht
+        const sendMessage = async () => {
+            const text = messageInput.value.trim();
+            if (text && username && currentUserId) {
+                try {
+                    await addDoc(collection(db, "global-chats"), {
+                        username: username,
+                        text: text,
+                        userId: currentUserId,
+                        timestamp: serverTimestamp()
                     });
+                    messageInput.value = '';
+                } catch (e) {
+                    console.error("Fehler beim Senden der Nachricht: ", e);
                 }
             }
+        };
 
-            // Starten des Listeners nach dem Laden der Firebase-SDKs
-            const observer = new MutationObserver((mutations, obs) => {
-                if (window.hasOwnProperty('firebase') && window.firebase.auth().currentUser) {
-                    db = getFirestore();
-                    startChatListener();
-                    obs.disconnect(); // Stoppe das Beobachten, sobald der Listener gestartet ist
-                }
-            });
-            //observer.observe(document.body, { childList: true, subtree: true });
+        // Event-Listener für das Senden von Nachrichten
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         });
     </script>
 </body>
