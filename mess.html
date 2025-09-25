@@ -51,14 +51,19 @@
     </style>
 </head>
 <body>
-    <!-- Username Modal -->
-    <div id="usernameModal" class="modal-overlay hidden">
+    <!-- Login/Signup Modal -->
+    <div id="authModal" class="modal-overlay hidden">
         <div class="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center">
-            <h2 class="text-xl font-bold mb-4">Wähle einen Benutzernamen</h2>
-            <input type="text" id="usernameInput" placeholder="Dein Name" class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
-            <button id="saveUsernameBtn" class="bg-blue-600 text-white font-medium px-6 py-2 rounded-full hover:bg-blue-700 transition-all duration-200">
-                Starten
+            <h2 class="text-xl font-bold mb-4">Anmelden / Registrieren</h2>
+            <input type="email" id="emailInput" placeholder="E-Mail" class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 w-full">
+            <input type="password" id="passwordInput" placeholder="Passwort" class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 w-full">
+            <button id="authButton" class="bg-blue-600 text-white font-medium px-6 py-2 rounded-full hover:bg-blue-700 transition-all duration-200 w-full">
+                Anmelden
             </button>
+            <button id="registerButton" class="bg-gray-200 text-gray-800 font-medium px-6 py-2 rounded-full hover:bg-gray-300 transition-all duration-200 w-full mt-2">
+                Registrieren
+            </button>
+            <div id="statusMessage" class="text-sm text-red-500 mt-2"></div>
         </div>
     </div>
 
@@ -66,9 +71,15 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 my-8 flex flex-col h-[80vh]">
         <!-- Header -->
         <div class="bg-gray-800 text-white p-4 rounded-t-2xl flex justify-between items-center">
-            <h1 class="text-xl font-bold">FleeChat</h1>
-            <div class="flex items-center gap-2">
-                <div id="userIdDisplay" class="text-sm font-medium bg-gray-700 px-3 py-1 rounded-full truncate"></div>
+            <h1 class="text-xl font-bold">Sicherer Chat</h1>
+            <div class="flex items-center space-x-4">
+                <button id="deleteMyMessagesButton" class="bg-red-500 text-white font-medium px-4 py-2 rounded-full text-xs hover:bg-red-600 transition-all duration-200">
+                    Meine Nachrichten löschen
+                </button>
+                <div class="flex flex-col items-end">
+                    <div id="usernameDisplay" class="text-sm font-medium bg-gray-700 px-3 py-1 rounded-full truncate"></div>
+                    <div id="userIdDisplay" class="text-xs font-mono bg-gray-700 mt-1 px-3 py-1 rounded-full text-gray-400 truncate"></div>
+                </div>
             </div>
         </div>
 
@@ -81,7 +92,7 @@
 
         <!-- Message input area -->
         <div class="p-4 bg-white rounded-b-2xl border-t border-gray-200 flex flex-col sm:flex-row items-center gap-2">
-            <input type="text" id="recipientInput" placeholder="Empfänger-Benutzername (optional)" class="w-full sm:w-1/2 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+            <input type="text" id="recipientIdInput" placeholder="Empfänger-ID (optional)" class="w-full sm:w-1/2 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
             <input type="text" id="messageInput" placeholder="Gib eine Nachricht ein..." class="w-full sm:w-1/2 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
             <button id="sendButton" class="w-full sm:w-auto bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,11 +104,11 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Füge hier deine Firebase-Konfiguration ein
-       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyADKgGaaGdHHcWKAtH4pJGCZapM8I41B5U",
   authDomain: "fleechat-fl.firebaseapp.com",
@@ -112,34 +123,38 @@ const firebaseConfig = {
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let username = localStorage.getItem('username');
         let currentUserId = null;
 
         const messagesContainer = document.getElementById('messagesContainer');
         const messageInput = document.getElementById('messageInput');
-        const recipientInput = document.getElementById('recipientInput');
+        const recipientIdInput = document.getElementById('recipientIdInput');
         const sendButton = document.getElementById('sendButton');
+        const usernameDisplay = document.getElementById('usernameDisplay');
         const userIdDisplay = document.getElementById('userIdDisplay');
-        const usernameModal = document.getElementById('usernameModal');
-        const usernameInput = document.getElementById('usernameInput');
-        const saveUsernameBtn = document.getElementById('saveUsernameBtn');
+        const authModal = document.getElementById('authModal');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const authButton = document.getElementById('authButton');
+        const registerButton = document.getElementById('registerButton');
+        const statusMessage = document.getElementById('statusMessage');
+        const deleteMyMessagesButton = document.getElementById('deleteMyMessagesButton');
 
         // Funktion zur Anzeige einer Nachricht in der UI
         const displayMessage = (msg, isSentByMe) => {
             const messageElement = document.createElement('div');
             messageElement.className = `flex ${isSentByMe ? 'justify-end' : 'justify-start'}`;
 
-            const senderName = isSentByMe ? 'Du' : msg.username;
-            const messageTime = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : new Date().toLocaleTimeString();
+            const senderName = msg.username || 'Unbekannt';
+            const messageTime = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : 'Wird gesendet...';
             
             // Textanzeige anpassen, um private Nachrichten zu kennzeichnen
-            const messageText = msg.recipientUsername ? `(Privat an ${msg.recipientUsername}) ${msg.text}` : msg.text;
+            const messageType = msg.recipientId ? `(privat an ${msg.recipientId.substring(0, 4)}...)` : '(öffentlich)';
 
             messageElement.innerHTML = `
                 <div class="message-bubble ${isSentByMe ? 'sent-message' : 'received-message'}">
-                    <div>${messageText}</div>
+                    <div>${msg.text}</div>
                     <div class="text-xs ${isSentByMe ? 'text-gray-200' : 'text-gray-500'} mt-1">
-                        <span class="font-medium">${senderName}:</span>
+                        <span class="font-medium">${senderName} ${messageType}:</span>
                         <span class="ml-1">${messageTime}</span>
                     </div>
                 </div>
@@ -147,80 +162,162 @@ const firebaseConfig = {
             messagesContainer.appendChild(messageElement);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         };
+        
+        // Funktion zum Löschen der eigenen Nachrichten
+        const deleteMyMessages = async () => {
+            if (!auth.currentUser) {
+                statusMessage.textContent = 'Bitte melden Sie sich an, um Nachrichten zu löschen.';
+                return;
+            }
+
+            try {
+                // Query zum Finden aller Nachrichten des aktuellen Nutzers
+                const myMessagesQuery = query(collection(db, "global-chats"), where("senderId", "==", auth.currentUser.uid));
+                const snapshot = await getDocs(myMessagesQuery);
+                
+                if (snapshot.empty) {
+                    statusMessage.textContent = 'Keine Nachrichten zum Löschen gefunden.';
+                    return;
+                }
+
+                const batch = writeBatch(db);
+                snapshot.docs.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+
+                await batch.commit();
+                statusMessage.textContent = `Erfolgreich ${snapshot.size} Nachrichten gelöscht.`;
+
+            } catch (error) {
+                console.error("Fehler beim Löschen der Nachrichten: ", error);
+                statusMessage.textContent = `Fehler beim Löschen: ${error.message}`;
+            }
+        };
+
+        // E-Mail/Passwort-Registrierung
+        registerButton.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            if (!email || !password) {
+                statusMessage.textContent = 'Bitte E-Mail und Passwort eingeben.';
+                return;
+            }
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                await sendEmailVerification(auth.currentUser);
+                statusMessage.textContent = 'Registrierung erfolgreich. Bitte überprüfen Sie Ihre E-Mails zur Verifizierung.';
+            } catch (error) {
+                statusMessage.textContent = `Registrierungsfehler: ${error.message}`;
+            }
+        });
+
+        // E-Mail/Passwort-Anmeldung
+        authButton.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            if (!email || !password) {
+                statusMessage.textContent = 'Bitte E-Mail und Passwort eingeben.';
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                if (!userCredential.user.emailVerified) {
+                    await auth.signOut();
+                    statusMessage.textContent = 'Bitte verifizieren Sie Ihre E-Mail-Adresse, bevor Sie sich anmelden.';
+                }
+            } catch (error) {
+                statusMessage.textContent = `Anmeldefehler: ${error.message}`;
+            }
+        });
 
         // Firebase Authentifizierung und Chat-Listener initialisieren
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                currentUserId = user.uid;
-                // Chat-Nachrichten in Echtzeit von Firestore abrufen
-                // ACHTUNG: Die Nachrichten werden auf Client-Seite gefiltert.
-                // Ohne angepasste Firestore-Sicherheitsregeln sind alle Nachrichten öffentlich lesbar.
-                const q = query(collection(db, "global-chats"), orderBy("timestamp"));
-                onSnapshot(q, (querySnapshot) => {
+                if (user.emailVerified) {
+                    authModal.classList.add('hidden');
+                    currentUserId = user.uid;
+                    const displayName = user.email || 'Nicht angemeldet';
+                    usernameDisplay.textContent = `Nutzer: ${displayName}`;
+                    userIdDisplay.textContent = `Deine ID: ${currentUserId}`;
+                    
+                    // Query für öffentliche Nachrichten
+                    const publicMessagesQuery = query(
+                        collection(db, "global-chats"),
+                        where("recipientId", "==", null),
+                        orderBy("timestamp")
+                    );
+
+                    // Query für private Nachrichten an mich
+                    const myPrivateMessagesQuery = query(
+                        collection(db, "global-chats"),
+                        where("recipientId", "==", currentUserId),
+                        orderBy("timestamp")
+                    );
+
+                    // Query für private Nachrichten, die von mir gesendet wurden
+                    const sentPrivateMessagesQuery = query(
+                        collection(db, "global-chats"),
+                        where("senderId", "==", currentUserId),
+                        where("recipientId", "!=", null),
+                        orderBy("timestamp")
+                    );
+
+                    // HINWEIS: Mehrere onSnapshot-Listener, um die Firestore-Sicherheitsregeln einzuhalten
                     messagesContainer.innerHTML = '';
-                    querySnapshot.forEach((doc) => {
-                        const messageData = doc.data();
-                        const isSentByMe = messageData.userId === currentUserId;
-                        const isPublicMessage = !messageData.recipientUsername;
-                        const isPrivateMessageForMe = messageData.recipientUsername === username;
-                        
-                        // Zeige die Nachricht nur an, wenn sie öffentlich ist oder für den aktuellen Nutzer bestimmt ist.
-                        if (isPublicMessage || isSentByMe || isPrivateMessageForMe) {
-                            displayMessage(messageData, isSentByMe);
-                        }
+                    [publicMessagesQuery, myPrivateMessagesQuery, sentPrivateMessagesQuery].forEach(q => {
+                        onSnapshot(q, (querySnapshot) => {
+                            querySnapshot.docChanges().forEach(change => {
+                                if (change.type === "added") {
+                                     displayMessage(change.doc.data(), change.doc.data().senderId === currentUserId);
+                                }
+                            });
+                        });
                     });
-                });
+
+                } else {
+                    // Falls E-Mail nicht verifiziert ist
+                    authModal.classList.remove('hidden');
+                    statusMessage.textContent = 'Bitte verifizieren Sie Ihre E-Mail-Adresse, bevor Sie sich anmelden.';
+                    auth.signOut();
+                }
             } else {
-                // Wenn kein Benutzer angemeldet ist, melde ihn anonym an
-                signInAnonymously(auth).catch(console.error);
+                authModal.classList.remove('hidden');
+                statusMessage.textContent = '';
             }
         });
 
-        // Username-Modal anzeigen, wenn kein Name gespeichert ist
-        if (!username) {
-            usernameModal.classList.remove('hidden');
-        } else {
-            userIdDisplay.textContent = `Nutzer: ${username}`;
-        }
-
-        // Username speichern und Modal schließen
-        saveUsernameBtn.addEventListener('click', () => {
-            const newUsername = usernameInput.value.trim();
-            if (newUsername) {
-                username = newUsername;
-                localStorage.setItem('username', username);
-                userIdDisplay.textContent = `Nutzer: ${username}`;
-                usernameModal.classList.add('hidden');
-            }
-        });
-
-        // Funktion zum Senden einer Nachricht
-        const sendMessage = async () => {
+        // Event-Listener für das Senden von Nachrichten
+        sendButton.addEventListener('click', async () => {
             const text = messageInput.value.trim();
-            const recipient = recipientInput.value.trim() || null; // Empfänger optional
-            if (text && username && currentUserId) {
+            const recipientId = recipientIdInput.value.trim() || null;
+            if (text && auth.currentUser && auth.currentUser.emailVerified) {
                 try {
                     await addDoc(collection(db, "global-chats"), {
-                        username: username,
+                        username: auth.currentUser.email,
                         text: text,
-                        userId: currentUserId,
-                        recipientUsername: recipient,
+                        senderId: auth.currentUser.uid,
+                        recipientId: recipientId,
                         timestamp: serverTimestamp()
                     });
                     messageInput.value = '';
                 } catch (e) {
                     console.error("Fehler beim Senden der Nachricht: ", e);
                 }
-            }
-        };
-
-        // Event-Listener für das Senden von Nachrichten
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
+            } else {
+                statusMessage.textContent = 'Bitte melden Sie sich an oder verifizieren Sie Ihre E-Mail-Adresse.';
             }
         });
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Event-Listener für das Löschen von Nachrichten
+        deleteMyMessagesButton.addEventListener('click', deleteMyMessages);
+
     </script>
 </body>
 </html>
