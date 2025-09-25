@@ -80,9 +80,10 @@
         </div>
 
         <!-- Message input area -->
-        <div class="p-4 bg-white rounded-b-2xl border-t border-gray-200 flex items-center gap-2">
-            <input type="text" id="messageInput" placeholder="Gib eine Nachricht ein..." class="flex-1 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-            <button id="sendButton" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-all duration-200">
+        <div class="p-4 bg-white rounded-b-2xl border-t border-gray-200 flex flex-col sm:flex-row items-center gap-2">
+            <input type="text" id="recipientInput" placeholder="Empfänger-Benutzername (optional)" class="w-full sm:w-1/2 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+            <input type="text" id="messageInput" placeholder="Gib eine Nachricht ein..." class="w-full sm:w-1/2 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+            <button id="sendButton" class="w-full sm:w-auto bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
@@ -116,6 +117,7 @@ const firebaseConfig = {
 
         const messagesContainer = document.getElementById('messagesContainer');
         const messageInput = document.getElementById('messageInput');
+        const recipientInput = document.getElementById('recipientInput');
         const sendButton = document.getElementById('sendButton');
         const userIdDisplay = document.getElementById('userIdDisplay');
         const usernameModal = document.getElementById('usernameModal');
@@ -130,9 +132,12 @@ const firebaseConfig = {
             const senderName = isSentByMe ? 'Du' : msg.username;
             const messageTime = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : new Date().toLocaleTimeString();
             
+            // Textanzeige anpassen, um private Nachrichten zu kennzeichnen
+            const messageText = msg.recipientUsername ? `(Privat an ${msg.recipientUsername}) ${msg.text}` : msg.text;
+
             messageElement.innerHTML = `
                 <div class="message-bubble ${isSentByMe ? 'sent-message' : 'received-message'}">
-                    <div>${msg.text}</div>
+                    <div>${messageText}</div>
                     <div class="text-xs ${isSentByMe ? 'text-gray-200' : 'text-gray-500'} mt-1">
                         <span class="font-medium">${senderName}:</span>
                         <span class="ml-1">${messageTime}</span>
@@ -147,15 +152,22 @@ const firebaseConfig = {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUserId = user.uid;
-                userIdDisplay.textContent = `Nutzer: ${username || 'Anonym'}`;
                 // Chat-Nachrichten in Echtzeit von Firestore abrufen
+                // ACHTUNG: Die Nachrichten werden auf Client-Seite gefiltert.
+                // Ohne angepasste Firestore-Sicherheitsregeln sind alle Nachrichten öffentlich lesbar.
                 const q = query(collection(db, "global-chats"), orderBy("timestamp"));
                 onSnapshot(q, (querySnapshot) => {
                     messagesContainer.innerHTML = '';
                     querySnapshot.forEach((doc) => {
                         const messageData = doc.data();
                         const isSentByMe = messageData.userId === currentUserId;
-                        displayMessage(messageData, isSentByMe);
+                        const isPublicMessage = !messageData.recipientUsername;
+                        const isPrivateMessageForMe = messageData.recipientUsername === username;
+                        
+                        // Zeige die Nachricht nur an, wenn sie öffentlich ist oder für den aktuellen Nutzer bestimmt ist.
+                        if (isPublicMessage || isSentByMe || isPrivateMessageForMe) {
+                            displayMessage(messageData, isSentByMe);
+                        }
                     });
                 });
             } else {
@@ -185,12 +197,14 @@ const firebaseConfig = {
         // Funktion zum Senden einer Nachricht
         const sendMessage = async () => {
             const text = messageInput.value.trim();
+            const recipient = recipientInput.value.trim() || null; // Empfänger optional
             if (text && username && currentUserId) {
                 try {
                     await addDoc(collection(db, "global-chats"), {
                         username: username,
                         text: text,
                         userId: currentUserId,
+                        recipientUsername: recipient,
                         timestamp: serverTimestamp()
                     });
                     messageInput.value = '';
