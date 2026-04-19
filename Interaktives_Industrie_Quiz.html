@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Geschichts-Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #eef2f3;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .quiz-container {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #e74c3c;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        button {
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: #3498db;
+            color: white;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .wrong {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        #score-display {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <h1>Geschichts-Trainer</h1>
+    <div id="game">
+        <div class="question" id="question-text">Lade Frage...</div>
+        <div class="options" id="options-container"></div>
+        <div id="feedback" class="feedback"></div>
+    </div>
+    <div id="score-display">Frage <span id="current-q">1</span> von 10</div>
+</div>
+
+<script>
+    const questions = [
+        { q: "Wann begann die Agrarrevolution in England?", a: ["um 1700", "um 1760", "1785", "1844"], correct: 1 },
+        { q: "Wann begann die Industrielle Revolution in England?", a: ["um 1770", "1776", "1808", "1834"], correct: 0 },
+        { q: "In welchem Jahr wurde der mechanische Webstuhl erfunden?", a: ["1764", "1770", "1785", "1806"], correct: 2 },
+        { q: "Wann fand der Aufstand der schlesischen Weber statt?", a: ["1838", "1844", "1848", "1851"], correct: 1 },
+        { q: "Wann wurde die erste Weltausstellung in London eröffnet?", a: ["1844", "1851", "1869", "1875"], correct: 1 },
+        { q: "Bessemer-Verfahren zur Massenstahlerzeugung?", a: ["1855/56", "1869/70", "1876", "1877"], correct: 0 },
+        { q: "Gründung der Sozialdemokratischen Arbeiterpartei?", a: ["1848", "1869", "1875", "1891"], correct: 1 },
+        { q: "Zeitraum der Unterdrückung durch das Sozialistengesetz?", a: ["1873-1895", "1878-1890", "1880-1895", "1890-1913"], correct: 1 },
+        { q: "Beginn der 'zweiten' Industriellen Revolution (Elektrizität)?", a: ["1879", "um 1890", "1893", "1903"], correct: 1 },
+        { q: "Einführung des Fließbandes bei Henry Ford?", a: ["1890", "1903", "1910", "1913"], correct: 3 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById('question-text').innerText = q.q;
+        document.getElementById('current-q').innerText = currentQuestion + 1;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        document.getElementById('feedback').className = 'feedback';
+        
+        q.a.forEach((option, index) => {
+            const btn = document.createElement('button');
+            btn.innerText = option;
+            btn.onclick = () => checkAnswer(index);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(index) {
+        const feedback = document.getElementById('feedback');
+        if (index === questions[currentQuestion].correct) {
+            feedback.innerText = "Richtig! Gut gemacht.";
+            feedback.className = "feedback correct";
+            score++;
+        } else {
+            feedback.innerText = "Leider falsch. Die richtige Antwort war: " + questions[currentQuestion].a[questions[currentQuestion].correct];
+            feedback.className = "feedback wrong";
+        }
+
+        setTimeout(() => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }, 2000);
+    }
+
+    function showResult() {
+        document.getElementById('game').innerHTML = `
+            <div style='text-align:center'>
+                <h2>Fertig!</h2>
+                <p>Du hast ${score} von ${questions.length} Fragen richtig beantwortet.</p>
+                <button onclick='location.reload()'>Nochmal spielen</button>
+            </div>
+        `;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
