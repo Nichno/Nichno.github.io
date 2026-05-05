@@ -2,58 +2,58 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>CH11 - Der 20-Fragen-Klausur-Check</title>
+    <title>CH11 - Experten-Check (Teil 2)</title>
     <style>
-        :root { --bg: #f0f2f5; --card: #ffffff; --primary: #2980b9; --accent: #3498db; --success: #27ae60; --error: #e74c3c; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
+        :root { --bg: #fdfdfd; --card: #ffffff; --primary: #8e44ad; --accent: #9b59b6; --success: #27ae60; --error: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #2c3e50; }
         .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; background: var(--primary); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .stats { position: sticky; top: 10px; background: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 100; margin-bottom: 20px; }
-        .q-card { background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .q-text { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; border-left: 4px solid var(--accent); padding-left: 10px; }
-        .options { display: grid; gap: 8px; }
-        button { padding: 12px; border: 1px solid #ddd; border-radius: 5px; background: white; cursor: pointer; text-align: left; transition: all 0.2s; font-size: 14px; }
-        button:hover:not(:disabled) { background: #f8f9fa; border-color: var(--accent); }
+        header { text-align: center; background: var(--primary); color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .stats { position: sticky; top: 10px; background: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 100; margin-bottom: 20px; border: 2px solid var(--primary); }
+        .q-card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .q-text { font-size: 1.15em; font-weight: 600; margin-bottom: 15px; color: var(--primary); }
+        .options { display: grid; gap: 10px; }
+        button { padding: 14px; border: 2px solid #eee; border-radius: 8px; background: white; cursor: pointer; text-align: left; transition: all 0.2s; font-size: 15px; font-weight: 500; }
+        button:hover:not(:disabled) { background: #f4f0f7; border-color: var(--accent); }
         button.correct { background: var(--success) !important; color: white; border-color: var(--success); }
         button.wrong { background: var(--error) !important; color: white; border-color: var(--error); }
-        .expl { display: none; margin-top: 15px; padding: 12px; background: #e8f4fd; border-radius: 5px; font-size: 0.9em; border-left: 4px solid var(--primary); }
+        .expl { display: none; margin-top: 15px; padding: 15px; background: #f9f5fb; border-radius: 8px; font-size: 0.95em; border-left: 5px solid var(--primary); line-height: 1.4; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🧪 Chemie Klausur-Trainer</h1>
-        <p>CH11: Alkane, Alkanole, Säuren & Kohlenhydrate</p>
+        <h1>🧪 CH11 Experten-Quiz</h1>
+        <p>Vertiefung: Redox-Chemie, Isomerie & Ketten-Eigenschaften</p>
     </header>
 
-    <div class="stats">Fortschritt: <span id="solved">0</span> / 20 | Punkte: <span id="score">0</span></div>
+    <div class="stats">Fortschritt: <span id="solved">0</span> / 20 | Score: <span id="score">0</span></div>
 
     <div id="quiz-area"></div>
 </div>
 
 <script>
 const quizData = [
-    { q: "Was ist die allgemeine Summenformel der Alkane?", a: "CnH2n+2", o: ["CnH2n", "CnH2n+2", "CnH2n-2"], e: "Korrekt[span_0](start_span)[span_0](end_span)!" },
-    { q: "Welches Alkan ist bei Raumtemperatur gasförmig?", a: "Butan", o: ["Pentan", "Butan", "Hexan"], e: "Methan bis Butan sind gasförmig. Pentan siedet erst bei 36°C.[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)" },
-    { q: "Wie nennt man Stoffe mit gleicher Summenformel, aber anderer Struktur?", a: "Isomere", o: ["Isotope", "Homologe", "Isomere"], e: "Gleiche Formel, anderes Gerüst = Isomerie.[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)" },
-    { q: "Warum mischen sich Heptan und Wasser nicht?", a: "Heptan ist unpolar.", o: ["Heptan ist zu schwer.", "Heptan ist unpolar.", "Wasser ist lipophil."], e: "Gleiches löst sich in Gleichem. Wasser ist polar, Alkane unpolar.[span_5](start_span)[span_5](end_span)" },
-    { q: "Welche Kraft wirkt primär zwischen Alkan-Molekülen?", a: "Van-der-Waals-Kräfte", o: ["Wasserstoffbrücken", "Ionenbindung", "Van-der-Waals-Kräfte"], e: "Die schwache Anziehung durch temporäre Dipole.[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)" },
-    { q: "Warum siedet Ethanol höher als Ethan?", a: "Wegen Wasserstoffbrücken.", o: ["Wegen VdW-Kräften.", "Wegen Wasserstoffbrücken.", "Weil es schwerer ist."], e: "Die OH-Gruppe ermöglicht starke Wasserstoffbrückenbindungen.[span_8](start_span)[span_8](end_span)" },
-    { q: "Welche Stoffklasse hat bei gleicher C-Zahl den höchsten Siedepunkt?", a: "Alkansäuren", o: ["Alkane", "Alkanole", "Alkansäuren"], e: "Carboxylgruppen bilden besonders starke Brücken aus.[span_9](start_span)[span_9](end_span)" },
-    { q: "Wie heißt 2,2-Dimethylpropan mit Trivialnamen?", a: "Neopentan", o: ["Isopentan", "Neopentan", "n-Pentan"], e: "Es ist eines der drei Pentan-Isomere.[span_10](start_span)[span_10](end_span)" },
-    { q: "Was passiert bei einer Oxidation organischer Stoffe?", a: "Oxidationszahl steigt.", o: ["Oxidationszahl steigt.", "Oxidationszahl sinkt.", "Elektronenaufnahme."], e: "Oxidation = Erhöhung der OZ / Elektronenabgabe.[span_11](start_span)[span_11](end_span)" },
-    { q: "Glucose + Fehling-Lösung ergibt einen...", a: "ziegelroten Niederschlag.", o: ["blauen Farbumschlag.", "ziegelroten Niederschlag.", "silbernen Spiegel."], e: "Nachweis der Aldehydgruppe durch Cu2O-Bildung.[span_12](start_span)[span_12](end_span)" },
-    { q: "Glucose ist eine...", a: "Aldose", o: ["Ketose", "Aldose", "Alkansäure"], e: "Sie besitzt eine Aldehydgruppe am C1.[span_13](start_span)[span_13](end_span)" },
-    { q: "Fructose ist eine...", a: "Ketose", o: ["Aldose", "Ketose", "Alkanol"], e: "Sie besitzt eine Ketogruppe am C2.[span_14](start_span)[span_14](end_span)" },
-    { q: "Die FloH-Regel besagt: Fischer-links ist...", a: "Haworth-oben", o: ["Haworth-unten", "Haworth-oben", "Haworth-rechts"], e: "F-l-o-H: Fischer links oben Haworth.[span_15](start_span)[span_15](end_span)" },
-    { q: "Was schwimmt oben: Hexan oder Wasser?", a: "Hexan", o: ["Hexan", "Wasser", "Mischen sich"], e: "Alkane haben eine geringere Dichte als Wasser.[span_16](start_span)[span_16](end_span)" },
-    { q: "Oxidationsstufe von C in Methan (CH4)?", a: "-IV", o: ["+IV", "-IV", "0"], e: "C zieht Elektronen von 4 H-Atomen an.[span_17](start_span)[span_17](end_span)" },
-    { q: "Was entsteht bei der Oxidation eines primären Alkohols?", a: "Aldehyd", o: ["Keton", "Aldehyd", "Ester"], e: "Primärer Alkohol -> Aldehyd -> Carbonsäure.[span_18](start_span)[span_18](end_span)" },
-    { q: "Wie heißt die längste Kette bei 3-Ethyl-2-methylhexan?", a: "Hexan", o: ["Pentan", "Hexan", "Heptan"], e: "Das Suffix gibt die Hauptkette an.[span_19](start_span)[span_19](end_span)" },
-    { q: "Was passiert mit der Entzündlichkeit bei längeren Alkan-Ketten?", a: "Sie sinkt.", o: ["Sie steigt.", "Sie sinkt.", "Bleibt gleich."], e: "Längere Ketten verdampfen schwerer (höherer Siedepunkt).[span_20](start_span)[span_20](end_span)" },
-    { q: "Summenformel von Octan?", a: "C8H18", o: ["C8H16", "C8H18", "C8H10"], e: "Anwendung von CnH2n+2.[span_21](start_span)[span_21](end_span)" },
-    { q: "Was passiert bei der Silberspiegelprobe?", a: "Silber-Ionen werden reduziert.", o: ["Zucker wird reduziert.", "Silber-Ionen werden reduziert.", "Nichts."], e: "Ag+ nimmt ein Elektron auf und wird zu elementarem Silber.[span_22](start_span)[span_22](end_span)" }
+    { q: "Wie viele Elektronen werden einem C-Atom bei der Lewis-Methode zugeordnet, wenn es eine C-C Bindung hat?", a: "1 Elektron", o: ["Alle 2 Elektronen", "1 Elektron", "Keines"], e: "Bei gleichen Elektronegativitätswerten (C-C) wird das Elektronenpaar geteilt.[span_0](start_span)[span_0](end_span)" },
+    { q: "Welches Alkan-Isomer hat bei gleicher C-Zahl den niedrigsten Siedepunkt?", a: "Das am stärksten verzweigte", o: ["Die unverzweigte Kette", "Das am stärksten verzweigte", "Beide gleich"], e: "Verzweigungen verringern die Oberfläche, was die Van-der-Waals-Kräfte schwächt.[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)" },
+    { q: "Wie heißt das Alkan mit 25 C-Atomen?", a: "Pentacosan", o: ["Heptacosan", "Pentacosan", "Tricosan"], e: "Die Formel lautet C25H52.[span_3](start_span)[span_3](end_span)" },
+    { q: "Was bildet Fehling II (Kalium-Natrium-Tartrat) mit den Kupferionen?", a: "Einen tiefblauen Komplex", o: ["Einen ziegelroten Stoff", "Einen tiefblauen Komplex", "Einen Silberspiegel"], e: "Der Komplex verhindert, dass Kupferionen als Hydroxid ausfallen.[span_4](start_span)[span_4](end_span)" },
+    { q: "Welche Oxidationszahl hat C in Methanol (CH3OH)?", a: "-II", o: ["-IV", "-II", "0"], e: "C zieht Elektronen von 3 H-Atomen (+3), gibt aber eines formal Richtung Sauerstoff ab.[span_5](start_span)[span_5](end_span)" },
+    { q: "Was ist ein 'primärer' Alkohol?", a: "Die OH-Gruppe sitzt an einem C-Atom mit max. einem weiteren C-Partner", o: ["Die OH-Gruppe sitzt an einem C-Atom mit max. einem weiteren C-Partner", "Er ist besonders stark konzentriert", "Er hat zwei OH-Gruppen"], e: "Wichtig für die Oxidation zum Aldehyd.[span_6](start_span)[span_6](end_span)" },
+    { q: "Warum sind Alkane gute Brennstoffe?", a: "Wegen der hohen Energieabgabe bei der Oxidation zu CO2", o: ["Weil sie Sauerstoff enthalten", "Wegen der hohen Energieabgabe bei der Oxidation zu CO2", "Weil sie unpolar sind"], e: "Die Verbrennung ist eine stark exotherme Redoxreaktion.[span_7](start_span)[span_7](end_span)" },
+    { q: "Wie heißt die Struktur von 2,2,4-Trimethylpentan?", a: "Isooctan", o: ["n-Octan", "Isooctan", "Heptan"], e: "Ein wichtiges Isomer für die Klopffestigkeit von Benzin.[span_8](start_span)[span_8](end_span)" },
+    { q: "Wie verhält sich die Dichte von Butan (Gas) zu Hexan (Flüssigkeit)?", a: "Butan hat eine deutlich geringere Dichte", o: ["Butan ist dichter", "Beide sind identisch", "Butan hat eine deutlich geringere Dichte"], e: "Gase (g/L) sind viel weniger dicht als Flüssigkeiten (g/mL).[span_9](start_span)[span_9](end_span)" },
+    { q: "Was ist die Hauptkette bei 3-Ethyl-2,4-dimethylheptan?", a: "Heptan", o: ["Hexan", "Heptan", "Octan"], e: "Die längste durchgehende C-Kette hat 7 Atome.[span_10](start_span)[span_10](end_span)" },
+    { q: "Welches Produkt entsteht bei der Reduktion einer Carbonsäure?", a: "Aldehyd (oder Alkohol)", o: ["Keton", "Ester", "Aldehyd (oder Alkohol)"], e: "Die Reduktion kehrt die Oxidationsreihe um.[span_11](start_span)[span_11](end_span)" },
+    { q: "Welche Formel hat Decan?", a: "C10H22", o: ["C10H20", "C10H22", "C10H24"], e: "Anwendung der CnH2n+2 Regel.[span_12](start_span)[span_12](end_span)" },
+    { q: "Was bedeutet 'hydrophil'?", a: "Wasserliebend", o: ["Wasserabweisend", "Wasserliebend", "Fettlösend"], e: "Alkohole sind durch die OH-Gruppe teilweise hydrophil.[span_13](start_span)[span_13](end_span)" },
+    { q: "Wozu dient der Silberspiegel-Test?", a: "Nachweis von Aldehyden", o: ["Nachweis von Alkanen", "Nachweis von Ketonen", "Nachweis von Aldehyden"], e: "Aldehyde reduzieren Silber-Ionen zu elementarem Silber.[span_14](start_span)[span_14](end_span)" },
+    { q: "Wie verändert sich die Viskosität (Zähflüssigkeit) bei längeren Alkanen?", a: "Sie nimmt zu", o: ["Sie nimmt ab", "Sie nimmt zu", "Bleibt gleich"], e: "Stärkere Van-der-Waals-Kräfte machen die Flüssigkeit zäher.[span_15](start_span)[span_15](end_span)" },
+    { q: "In welcher Form liegt Glucose meistens vor?", a: "Ringform (Haworth)", o: ["Offene Kette (Fischer)", "Ringform (Haworth)", "Gasförmig"], e: "In wässriger Lösung bildet sich fast immer das Halbacetal (Ring).[span_16](start_span)[span_16](end_span)" },
+    { q: "Was ist 2-Methylbutan?", a: "Ein Isomer von Pentan", o: ["Ein Isomer von Hexan", "Ein Isomer von Pentan", "Eine eigenständige homologe Reihe"], e: "Summenformel C5H12.[span_17](start_span)[span_17](end_span)" },
+    { q: "Was ist die Oxidationszahl von Sauerstoff in organischen Molekülen meist?", a: "-II", o: ["-I", "-II", "0"], e: "Sauerstoff ist sehr elektronegativ und zieht Elektronen an.[span_18](start_span)[span_18](end_span)" },
+    { q: "Was sind 'Van-der-Waals-Kräfte'?", a: "Temporäre Dipol-Anziehungen", o: ["Echte chemische Bindungen", "Temporäre Dipol-Anziehungen", "Magnetische Felder"], e: "Entstehen durch kurzzeitige Elektronenverschiebung.[span_19](start_span)[span_19](end_span)[span_20](start_span)[span_20](end_span)" },
+    { q: "Welche Farbe hat die Fehling-Lösung zu Beginn?", a: "Tiefblau", o: ["Farblos", "Tiefblau", "Ziegelrot"], e: "Durch die hydratisierten Kupfer(II)-Ionen.[span_21](start_span)[span_21](end_span)" }
 ];
 
 let score = 0;
