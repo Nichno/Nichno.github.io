@@ -1,0 +1,175 @@
+html_content = """
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Großes Quiz: Geschichte der Informatik & Internet</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        .quiz-container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .question { margin-bottom: 25px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .question p { font-weight: bold; margin-bottom: 10px; color: #34495e; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 8px 0; padding: 10px; background: #f9f9f9; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        .options li:hover { background: #e1f5fe; }
+        .options li input { margin-right: 10px; }
+        button { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; display: block; margin: 30px auto; font-size: 16px; font-weight: bold; }
+        button:hover { background: #219150; }
+        #result { text-align: center; font-size: 1.2em; font-weight: bold; margin-top: 20px; padding: 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Informatik & Internet Historie Quiz</h1>
+        <form id="quizForm">
+            <div class="question" data-answer="200v">
+                <p>1. Wann wurde das Binärsystem erfunden?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q1" value="1500"> um 1500</li>
+                    <li><input type="radio" name="q1" value="200v"> 200 v. Chr.</li>
+                    <li><input type="radio" name="q1" value="1642"> 1642</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="davinci">
+                <p>2. Wer entwarf um 1500 einen Taschenrechner?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q2" value="pascal"> Blaise Pascal</li>
+                    <li><input type="radio" name="q2" value="davinci"> Leonardo da Vinci</li>
+                    <li><input type="radio" name="q2" value="zuse"> Konrad Zuse</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1642">
+                <p>3. In welchem Jahr baute Blaise Pascal die erste Rechenmaschine?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q3" value="1642"> 1642</li>
+                    <li><input type="radio" name="q3" value="1843"> 1843</li>
+                    <li><input type="radio" name="q3" value="1937"> 1937</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="ada">
+                <p>4. Wer schrieb 1843 das erste Computerprogramm?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q4" value="gates"> Bill Gates</li>
+                    <li><input type="radio" name="q4" value="ada"> Ada Lovelace</li>
+                    <li><input type="radio" name="q4" value="turing"> Alan Turing</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="turing">
+                <p>5. Wer entwickelte 1937 das theoretische Modell eines Computers?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q5" value="zuse"> Konrad Zuse</li>
+                    <li><input type="radio" name="q5" value="turing"> Alan Turing</li>
+                    <li><input type="radio" name="q5" value="pascal"> Blaise Pascal</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1941">
+                <p>6. In welchem Jahr erfand Konrad Zuse den ersten programmierbaren Computer?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q6" value="1941"> 1941</li>
+                    <li><input type="radio" name="q6" value="1950"> 1950</li>
+                    <li><input type="radio" name="q6" value="1964"> 1964</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1950">
+                <p>7. Wann wurden die ersten geräteunabhängigen Programmiersprachen entwickelt?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q7" value="1941"> 1941</li>
+                    <li><input type="radio" name="q7" value="1950"> 1950</li>
+                    <li><input type="radio" name="q7" value="1975"> 1975</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1964">
+                <p>8. Wann gab es die erste Textverarbeitung?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q8" value="1964"> 1964</li>
+                    <li><input type="radio" name="q8" value="1972"> 1972</li>
+                    <li><input type="radio" name="q8" value="1993"> 1993</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1972">
+                <p>9. Wann wurde die Computermaus erfunden?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q9" value="1964"> 1964</li>
+                    <li><input type="radio" name="q9" value="1972"> 1972</li>
+                    <li><input type="radio" name="q9" value="1975"> 1975</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1975">
+                <p>10. Wann gründete Bill Gates Microsoft?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q10" value="1969"> 1969</li>
+                    <li><input type="radio" name="q10" value="1972"> 1972</li>
+                    <li><input type="radio" name="q10" value="1975"> 1975</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1965">
+                <p>11. Wann wurde ARPANET (der Vorläufer des Internets) gegründet?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q11" value="1965"> 1965</li>
+                    <li><input type="radio" name="q11" value="1969"> 1969</li>
+                    <li><input type="radio" name="q11" value="1971"> 1971</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1969">
+                <p>12. Wann wurden die ersten Computer über lange Strecken miteinander verbunden?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q12" value="1965"> 1965</li>
+                    <li><input type="radio" name="q12" value="1969"> 1969</li>
+                    <li><input type="radio" name="q12" value="1971"> 1971</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1971">
+                <p>13. Wann wurde die erste E-Mail verschickt?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q13" value="1969"> 1969</li>
+                    <li><input type="radio" name="q13" value="1971"> 1971</li>
+                    <li><input type="radio" name="q13" value="1989"> 1989</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1989">
+                <p>14. Wann wurde das World Wide Web am CERN entwickelt?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q14" value="1989"> 1989-1990</li>
+                    <li><input type="radio" name="q14" value="1993"> 1993</li>
+                    <li><input type="radio" name="q14" value="1971"> 1971</li>
+                </ul>
+            </div>
+            <div class="question" data-answer="1993">
+                <p>15. Wann wurde das GUI (Graphic User Interface / Point-and-Click) eingeführt?</p>
+                <ul class="options">
+                    <li><input type="radio" name="q15" value="1989"> 1989</li>
+                    <li><input type="radio" name="q15" value="1990"> 1990</li>
+                    <li><input type="radio" name="q15" value="1993"> 1993</li>
+                </ul>
+            </div>
+            <button type="button" onclick="checkAnswers()">Quiz auswerten</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let correct = 0;
+            const questions = document.querySelectorAll('.question');
+            questions.forEach(q => {
+                const answer = q.getAttribute('data-answer');
+                const selected = q.querySelector('input:checked');
+                if (selected && selected.value === answer) {
+                    correct++;
+                    q.style.border = "2px solid #27ae60";
+                } else if (selected) {
+                    q.style.border = "2px solid #e74c3c";
+                }
+            });
+            document.getElementById('result').innerText = "Du hast " + correct + " von 15 Fragen richtig beantwortet!";
+        }
+    </script>
+</body>
+</html>
+"""
+
+with open("informatik_history_quiz.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+
